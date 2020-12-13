@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    //Sphere in the Middel of the object
-    public Rigidbody sphere;
+    //Sphere in the Middle of the object
+    public Rigidbody sphereRigidBody;
+
+    //Wheels
+    public Transform leftFrontWheel, rightFrontWheel;
+    public float maxWheelTurn = 25f;
 
     //To simplify the meassurments in Unity
     private const float MULTIPLY_FACTOR = 1000f;
 
     //Definition of the different forces
-    public float forwardAccel = 8f, reverseAccel = 4f, maxSpeed = 50f, turnsStrength = 180f;
+    public float forwardAccel = 8f, reverseAccel = 4f, maxSpeed = 50f, turnsStrength = 180f, gravityModifier = 10f;
 
     private float speedInput, turnInput;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //Remove the parent node from the sphere
-        sphere.transform.parent = null;
+        //Remove the parent node from the spheres on the wheels
+        sphereRigidBody.transform.parent = null;
+
+        //Increment the Gravity for this object
+        Physics.gravity *= gravityModifier;
     }
 
     // Update is called once per frame
@@ -38,21 +46,34 @@ public class CarController : MonoBehaviour
             speedInput = Input.GetAxis("Vertical") * reverseAccel * MULTIPLY_FACTOR;
         }
 
+
         //Lateral movement with input
         turnInput = Input.GetAxis("Horizontal");
+        
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnsStrength * Time.deltaTime * Input.GetAxis("Vertical"), 0f));
 
-        //Move our object to the sphere location
-        transform.position = sphere.transform.position;
+        //Rotate the left wheel with the input
+        leftFrontWheel.localRotation = Quaternion.Euler(leftFrontWheel.localRotation.eulerAngles.x, turnInput * maxWheelTurn, leftFrontWheel.localRotation.eulerAngles.z);
+
+        //Rotate the right wheel with the input
+        rightFrontWheel.localRotation = Quaternion.Euler(rightFrontWheel.localRotation.eulerAngles.x, turnInput * maxWheelTurn, rightFrontWheel.localRotation.eulerAngles.z);
+
+        //Move our object to the position of the spheres 
+        transform.position = sphereRigidBody.transform.position;
+
     }
 
     private void FixedUpdate()
     {
         //Move the sphere forward and backward
-        if(Mathf.Abs(speedInput) > 0)
+        if (Mathf.Abs(speedInput) > 0)
         {
-            sphere.AddForce(transform.forward * speedInput);
-        }
-        
+            sphereRigidBody.AddForce(transform.forward * speedInput);
+        }   
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        sphereRigidBody.velocity.Scale(Vector3.zero);
     }
 }
