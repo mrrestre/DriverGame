@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Player_Car
+  - Mission_Start_Trigger
+  - Mission_End_Trigger
   layers:
   - Default
   - TransparentFX
