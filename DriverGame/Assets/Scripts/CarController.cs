@@ -16,15 +16,11 @@ public class CarController : MonoBehaviour
     public Transform leftFrontWheel, rightFrontWheel;
     public float maxWheelTurn = 25f;
 
-    //To simplify the meassurments in Unity
-    private const float MULTIPLY_FACTOR = 1000f;
-
     //Definition of the different forces
     public float forwardAccel = 8f, reverseAccel = 4f, maxSpeed = 50f, turnsStrength = 180f, gravityModifier = 10f;
 
     private float speedInput, turnInput;
 
-    public float acceleration = 0.5f;
 
 
     // Start is called before the first frame update
@@ -49,18 +45,27 @@ public class CarController : MonoBehaviour
         //Forward and reverse speed with input
         if(Input.GetAxis("Vertical") > 0)
         {
-            speedInput = Input.GetAxis("Vertical") * forwardAccel * MULTIPLY_FACTOR;
+            speedInput = Input.GetAxis("Vertical") * forwardAccel;
         }
         else if (Input.GetAxis("Vertical") < 0)
         {
-            speedInput = Input.GetAxis("Vertical") * reverseAccel * MULTIPLY_FACTOR;
+            speedInput = Input.GetAxis("Vertical") * reverseAccel;
         }
 
 
         //Lateral movement with input
         turnInput = Input.GetAxis("Horizontal");
-        
-        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnsStrength * Time.deltaTime * Input.GetAxis("Vertical"), 0f));
+
+        if (Input.GetAxis("Vertical") > 0)
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnsStrength * Time.deltaTime * sphereRigidBody.velocity.magnitude, 0f));
+        }
+
+        else if (Input.GetAxis("Vertical") < 0)
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnsStrength * Time.deltaTime * Input.GetAxis("Vertical") * 10f, 0f));
+        }
+
 
         //Rotate the left wheel with the input
         leftFrontWheel.localRotation = Quaternion.Euler(leftFrontWheel.localRotation.eulerAngles.x, turnInput * maxWheelTurn, leftFrontWheel.localRotation.eulerAngles.z);
@@ -75,15 +80,25 @@ public class CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Move the sphere forward and backward
-        if (Mathf.Abs(speedInput) > 0)
+        //Only apply force if the max speed is not reached
+        if(sphereRigidBody.velocity.magnitude < maxSpeed)
         {
-            sphereRigidBody.AddForce(transform.forward * speedInput);
-        }   
+            //Move the sphere forward and backward
+            if (Mathf.Abs(speedInput) > 0)
+            {
+                sphereRigidBody.AddForce(transform.forward * speedInput, ForceMode.Acceleration);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //If the other object should dissapear on contact
+        if(other.gameObject.tag == "Obstacle_Dissapears")
+        {
+            other.gameObject.SetActive(false);
+        }
+
         sphereRigidBody.velocity.Scale(Vector3.zero);
     }
 

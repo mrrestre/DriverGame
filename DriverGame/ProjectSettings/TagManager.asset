@@ -7,6 +7,7 @@ TagManager:
   - Player_Car
   - Mission_Start_Trigger
   - Mission_End_Trigger
+  - Obstacle_Dissapears
   layers:
   - Default
   - TransparentFX
