@@ -8,6 +8,7 @@ TagManager:
   - Mission_Start_Trigger
   - Mission_End_Trigger
   - Obstacle_Dissapears
+  - Player_Damage
   layers:
   - Default
   - TransparentFX
