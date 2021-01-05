@@ -11,8 +11,13 @@ public class CountdownTimer : MonoBehaviour
     public bool takingAway = false;
 
     private StartMissionTrigger startMissionTrigger;
+    public EndMissionTrigger endMissionTrigger;
+
     public GameObject startTrigger;
+
     public GameObject countdownFailedScreen;
+
+    Coroutine lastCoroutine = null;
 
     // Start is called before the first frame update
     void Start()
@@ -26,15 +31,24 @@ public class CountdownTimer : MonoBehaviour
     {
         if (startMissionTrigger.hasMissionStarted == true && takingAway == false && secondsLeft > 0)
         {
-            StartCoroutine(TimerTake());
+            lastCoroutine = StartCoroutine(TimerTake());
         }
+        
+        
+
+       
     }
+
 
     IEnumerator TimerTake()
     {
         takingAway = true;
-        yield return new WaitForSeconds(1);
-        secondsLeft -= 1;
+        //(startMissionTrigger.hasMissionStarted == true && endMissionTrigger.hasMissionEnded == false)
+        
+            yield return new WaitForSeconds(1);
+            secondsLeft -= 1;
+        
+
         if (secondsLeft < 10)
         {
             textDisplay.GetComponent<Text>().text = "00:0" + secondsLeft;
@@ -49,5 +63,6 @@ public class CountdownTimer : MonoBehaviour
         {
             countdownFailedScreen.gameObject.SetActive(true);
         }
+
     }
 }

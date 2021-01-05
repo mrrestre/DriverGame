@@ -21,6 +21,8 @@ public class MissionController : MonoBehaviour
     public StartMissionTrigger startMissionTrigger;
     public EndMissionTrigger endMissionTrigger;
 
+    public float sec = 5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,11 @@ public class MissionController : MonoBehaviour
             if (endMissionTrigger.hasMissionEnded == true)
             {
                 endScreen.gameObject.SetActive(true);
+
+                if (endScreen.gameObject.activeInHierarchy)
+                { 
+                 StartCoroutine(LateCall());
+                }
 
                 Debug.Log("Mission Ended!");
 
@@ -105,5 +112,14 @@ public class MissionController : MonoBehaviour
         }
         
         return result;
+    }
+
+    //Coroutine for EndScreen to disappear after "sec" seconds
+    IEnumerator LateCall()
+    {
+
+        yield return new WaitForSeconds(sec);
+
+        endScreen.gameObject.SetActive(false);
     }
 }
