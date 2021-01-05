@@ -15,29 +15,26 @@ public class WayPointEnd : MonoBehaviour
 
     public float closeEnoughDist;
 
+    public MissionController missionController;
+
     private StartMissionTrigger startMissionTrigger;
     private EndMissionTrigger endMissionTrigger;
 
-    public GameObject startTrigger;
-    public GameObject endTrigger;
     // Start is called before the first frame update
     void Start()
     {
-        this.startMissionTrigger = startTrigger.GetComponent<StartMissionTrigger>();
-        this.endMissionTrigger = endTrigger.GetComponent<EndMissionTrigger>();
-
-
         iconImg = GetComponent<Image>();
         distanceText = GetComponentInChildren<Text>();
-
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (startMissionTrigger.hasMissionStarted == true)
+        this.target = missionController.endObject.transform;
+        this.startMissionTrigger = missionController.startObject.GetComponent<StartMissionTrigger>();
+        this.endMissionTrigger = missionController.endObject.GetComponent<EndMissionTrigger>();
+
+        if (this.startMissionTrigger.hasMissionStarted == true)
         {
             GetDistance();
             CheckOnScreen();
