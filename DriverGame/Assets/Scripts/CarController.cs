@@ -98,8 +98,10 @@ public class CarController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
-
-        sphereRigidBody.velocity.Scale(Vector3.zero);
+        else
+        {
+            sphereRigidBody.velocity.Scale(Vector3.zero);
+        }
     }
 
     private void takeDamage(int damage)
