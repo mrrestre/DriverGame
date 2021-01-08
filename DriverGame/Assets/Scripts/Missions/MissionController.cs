@@ -4,122 +4,134 @@ using UnityEngine;
 
 public class MissionController : MonoBehaviour
 {
-    public GameObject[] missionsList;
+    //Missions pool
+    public List<SingleMission> missionsList = new List<SingleMission>();
 
-    public int currentMission;
-    public List<int> completedMissions = new List<int>();
+    //Mission Counter
+    private int missionCounter = 0;
 
-    public bool allMissionsDone = false;
+    //Change during the game
+    public SingleMission currentMission;
 
-    public GameObject mission;
+    private bool allMissionsDone = false;
 
-    public GameObject startObject;
-    public GameObject endObject;
+    //Screen where the mission overview is shown
+    public GameObject endMissionScreen;
 
-    public GameObject endScreen;
+    //How long the end mission overview is shown
+    public int endMissionScreenTimer = 4;
 
-    public StartMissionTrigger startMissionTrigger;
-    public EndMissionTrigger endMissionTrigger;
+    ////////External Scripts////////
 
-    public float sec = 5f;
+    //Countdown Logic
+    public GameObject countDownGameObject;
+    private CountdownTimer countdown;
+
+    //Waypoint Logic
+    public GameObject wayPointGameObject;
+    private WayPoint waypoint;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        startANewMission();
+        countdown  = countDownGameObject.GetComponent<CountdownTimer>();
+        waypoint   = wayPointGameObject.GetComponent<WayPoint>();
+        startNextMission();
     }
 
     // Update is called once per frame
     void Update()
     {
+        //If there are still missions to be done
         if(!allMissionsDone)
         {
-            if (startMissionTrigger.hasMissionStarted == true)
+            //If a mission has been started (Start element was touched with the car)
+            if (currentMission.startObject.GetComponent<StartMissionTrigger>().hasMissionStarted == true)
             {
-                Debug.Log("Mission Started!");
-                startObject.gameObject.SetActive(false);
+                Debug.Log("Mission " + currentMission.name + " Started!");
 
-                endObject.gameObject.SetActive(true);
+                //Deactivate the start element on map
+                currentMission.startObject.gameObject.SetActive(false);
+
+                //Activate the end element on map
+                currentMission.endObject.gameObject.SetActive(true);
+
+                //Set WayPoint end to the end element
+                waypoint.setTarget(currentMission.endObject.transform);
+
+                //Start Timer
+                countdown.startTimer(currentMission.timeForMission);
             }
 
-            if (endMissionTrigger.hasMissionEnded == true)
+            //Was the mission end element touched, then the mission is done
+            if (currentMission.endObject.GetComponent<EndMissionTrigger>().hasMissionEnded == true)
             {
-                endScreen.gameObject.SetActive(true);
+                Debug.Log("Mission " + currentMission.name + " Ended!");
 
-                if (endScreen.gameObject.activeInHierarchy)
-                { 
-                 StartCoroutine(LateCall());
+                //Stop Timer
+                countdown.stopTimer();
+
+                //Write how long was needed to complete the mission
+                currentMission.completionTime = (int)countdown.timer.Elapsed.TotalSeconds;
+                Debug.Log("Time needed to end mission " + currentMission.completionTime);
+
+                //Deactivate the end element on map
+                currentMission.endObject.gameObject.SetActive(false);
+
+                //Increment the mission counter
+                this.missionCounter++;
+
+                //Show Mission Overview (If it isn´t the last mission)
+                if(this.missionCounter != this.missionsList.Count)
+                {
+                    endMissionScreen.gameObject.SetActive(true);
+                    if (endMissionScreen.gameObject.activeInHierarchy)
+                    {
+                        StartCoroutine(LateCall());
+                    }
+                }
+                //Show all mission overview if that was the last mission
+                else
+                {
+                    Debug.Log("You Completed all missions!");
+
+                    //Set the all missions done boolean to true
+                    this.allMissionsDone = true;
+
+                    //TODO: create end screen
+                    Time.timeScale = 0f;
                 }
 
-                Debug.Log("Mission Ended!");
 
-                endObject.gameObject.SetActive(false);
-
-                this.completedMissions.Add(this.currentMission);
-
-                startANewMission();
+                //Start a new mission (If not all missions are done)
+                startNextMission();
             }
         }
     }
 
-    void startANewMission()
+    void startNextMission()
     {
         //If all Missions are done
-        if(this.missionsList.Length == this.completedMissions.Count)
+        if(this.missionCounter != this.missionsList.Count)
         {
-            this.allMissionsDone = true;
-            //TODO: create end screen
-            Debug.Log("You Completed all missions!");
-        }
-        else
-        {
-            while (true)
-            {
-                this.currentMission = Random.Range(0, this.missionsList.Length);
-                if (!missionAlreadyDone(this.currentMission))
-                {
-                    break;
-                }
-            }
-
-            //Choose a random Mission from the list of missions
-            mission = missionsList[this.currentMission];
-
-            //Assign the start and end triggers from the choosen mission
-            this.startObject = mission.transform.GetChild(0).gameObject;
-            this.endObject = mission.transform.GetChild(1).gameObject;
+            //Set the current mission to the next posible mission
+            currentMission = missionsList[missionCounter];
 
             //Set start trigger active
-            this.startObject.gameObject.SetActive(true);
+            currentMission.startObject.SetActive(true);
 
-            //Get the triggers from the start and end objects
-            this.startMissionTrigger = startObject.GetComponent<StartMissionTrigger>();
-            this.endMissionTrigger = endObject.GetComponent<EndMissionTrigger>();
+            //Set Waypoint to the start object of the next mission
+            waypoint.setTarget(currentMission.startObject.transform);
         }
     }
 
-    bool missionAlreadyDone(int randomMission)
-    {
-        bool result = false;
-
-        for(int i = 0; i < this.completedMissions.Count; i++)
-        {
-            if(randomMission == completedMissions[i])
-            {
-                //Mission Already Done
-                result = true;
-            }
-        }
-        
-        return result;
-    }
-
-    //Coroutine for EndScreen to disappear after "sec" seconds
+    //Coroutine for EndScreen to disappear after "endMissionScreenTimer" seconds
     IEnumerator LateCall()
     {
-
-        yield return new WaitForSeconds(sec);
-
-        endScreen.gameObject.SetActive(false);
+        Time.timeScale = 0.5f;
+        yield return new WaitForSeconds(endMissionScreenTimer);
+        endMissionScreen.gameObject.SetActive(false);
+        Time.timeScale = 1;
     }
 }
