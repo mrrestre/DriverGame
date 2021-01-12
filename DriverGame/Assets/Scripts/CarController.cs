@@ -7,10 +7,8 @@ public class CarController : MonoBehaviour
     //Sphere in the Middle of the object
     public Rigidbody sphereRigidBody;
 
-    // to Controll the Health
-    public int maxHealth = 100;
-    public int currentHealth;
-    public HealthBar healthBar;
+    // Health Bar reference
+    [SerializeField] private HealthBar healthBar;
 
     //Wheels
     public Transform leftFrontWheel, rightFrontWheel;
@@ -22,7 +20,6 @@ public class CarController : MonoBehaviour
     private float speedInput, turnInput;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +29,6 @@ public class CarController : MonoBehaviour
         //Increment the Gravity for this object
         Physics.gravity *= gravityModifier;
 
-        // set the Health to 100 when the game starts
-        currentHealth = maxHealth;
-        healthBar.setMaxHealth(maxHealth);
     }
 
     // Update is called once per frame
@@ -104,9 +98,12 @@ public class CarController : MonoBehaviour
         }
     }
 
-    private void takeDamage(int damage)
+    private void CarGetDamaged(Collider other)
     {
-        currentHealth -= damage;
-        healthBar.SetHealth(currentHealth);
+        if(other.gameObject.tag == "Palyer_Damage")
+        {
+            healthBar.setHealthBar(.2f);
+        }
     }
+
 }
