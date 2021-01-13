@@ -16,8 +16,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject tiltingPart;
 
     // Health Bar reference
-    [SerializeField] private HealthBar healthBar;
-
+    public HealthBar healthBar;
 
     ////////////////////////////////////
 
@@ -113,6 +112,11 @@ public class CarController : MonoBehaviour
 
         //For the tilting of the car
         currentLateralTilt = tiltingPart.transform.rotation.z;
+
+        // for the Health bar
+        healthBar.findImageBar();
+        healthBar.setHealthBarFull();
+
     }
 
     // Update is called once per frame
@@ -296,9 +300,11 @@ public class CarController : MonoBehaviour
 
     private void CarGetDamaged(Collider other)
     {
-        if(other.gameObject.tag == "Palyer_Damage")
+        if(other.gameObject.tag == "Player_Damage")
         {
-            healthBar.setHealthBar(.2f);
+            // just for testing, after that setHealthBarDamage(float damageSize) Methode will be called
+            healthBar.setHealthBarValue(.2f);
+            Debug.Log("Damage collider");
         }
     }
 

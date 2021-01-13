@@ -6,19 +6,14 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
 
-    private Image barImage;
-    private float maxHealth = 1f;
+    public Image barImage;
     private float currentHealth;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        barImage = transform.Find("Bar").GetComponent<Image>();
-
-        currentHealth = maxHealth;
-
-        setHealthBarFull(currentHealth);
+        currentHealth = 1f;
     }
 
     // Update is called once per frame
@@ -27,17 +22,27 @@ public class HealthBar : MonoBehaviour
         
     }
 
-    public void setHealthBarFull(float maxHealth)
+    public void findImageBar()
     {
-        barImage.fillAmount = maxHealth;
+        barImage = transform.Find("Bar").GetComponent<Image>();
     }
 
-    public void setHealthBar(float damageSize)
+    public void setHealthBarFull()
+    {
+        barImage.fillAmount = 1f;
+    }
+
+    public void setHealthBarDamage(float damageSize)
     {
         currentHealth -= damageSize;
         barImage.fillAmount = currentHealth;
     }
 
+    public void setHealthBarValue(float healthValue)
+    {
+        barImage.fillAmount = healthValue;
+    }
 
-    
+
+
 }
