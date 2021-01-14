@@ -295,16 +295,22 @@ public class CarController : MonoBehaviour
         else if(other.gameObject.tag == "Player_Damage")
         {
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
-        }
-    }
-
-    private void CarGetDamaged(Collider other)
-    {
-        if(other.gameObject.tag == "Player_Damage")
-        {
-            // just for testing, after that setHealthBarDamage(float damageSize) Methode will be called
             healthBar.setHealthBarValue(.2f);
             Debug.Log("Damage collider");
+
+        }
+
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Player_Damage")
+        {
+            sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
+            // hier kommt den Logik von Damage
+            healthBar.setHealthBarValue(.2f);
+            Debug.Log("Damage collider");
+
         }
     }
 
