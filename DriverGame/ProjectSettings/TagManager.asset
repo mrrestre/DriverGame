@@ -9,6 +9,7 @@ TagManager:
   - Mission_End_Trigger
   - Obstacle_Dissapears
   - Player_Damage
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -21,8 +22,8 @@ TagManager:
   - Ground
   - Minimap
   - Level
-  - 
-  - 
+  - WhatIsPlayer
+  - WhatIsEnemy
   - 
   - 
   - 
