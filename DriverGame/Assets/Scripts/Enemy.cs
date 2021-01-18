@@ -29,7 +29,6 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.Find("Player_Car").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
