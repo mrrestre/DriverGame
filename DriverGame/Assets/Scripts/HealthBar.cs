@@ -13,7 +13,7 @@ public class HealthBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = 1f;
+       
     }
 
     // Update is called once per frame
@@ -29,7 +29,8 @@ public class HealthBar : MonoBehaviour
 
     public void setHealthBarFull()
     {
-        barImage.fillAmount = 1f;
+        this.currentHealth = 1f;
+        barImage.fillAmount = currentHealth;
     }
 
     public void setHealthBarDamage(float damageSize)
@@ -41,6 +42,11 @@ public class HealthBar : MonoBehaviour
     public void setHealthBarValue(float healthValue)
     {
         barImage.fillAmount = healthValue;
+    }
+
+    public float getCurrentHealth()
+    {
+        return this.currentHealth;
     }
 
 

@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 2602876979885968859}
   - component: {fileID: 2602876979885968858}
   - component: {fileID: 2602876979885968853}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SphereRB
   m_TagString: Player_Car
   m_Icon: {fileID: 0}
@@ -759,7 +759,8 @@ GameObject:
   - component: {fileID: 2602876980801204652}
   - component: {fileID: 2602876980801204655}
   - component: {fileID: 2602876980801204654}
-  m_Layer: 0
+  - component: {fileID: 1273045907}
+  m_Layer: 11
   m_Name: f
   m_TagString: Player_Car
   m_Icon: {fileID: 0}
@@ -835,6 +836,7 @@ MonoBehaviour:
   rightFrontWheel: {fileID: 6851507995367610516}
   tiltingPart: {fileID: 8937903184240060148}
   healthBar: {fileID: 0}
+  currentHealth: 0
   currentVelocity: 0
   finalVelocity: 50
   accelerationRate: 15
@@ -851,6 +853,20 @@ MonoBehaviour:
   currentAccelerationTilt: 0
   gravityModifier: 5
   maxWheelTurn: 30
+--- !u!64 &1273045907
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851507995367769274}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &6851507995367769276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,7 +1037,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5262670014204391093}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}

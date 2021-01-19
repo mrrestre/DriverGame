@@ -17,6 +17,7 @@ public class CarController : MonoBehaviour
 
     // Health Bar reference
     public HealthBar healthBar;
+    public float currentHealth;
 
     ////////////////////////////////////
 
@@ -116,7 +117,8 @@ public class CarController : MonoBehaviour
         // for the Health bar
         healthBar.findImageBar();
         healthBar.setHealthBarFull();
-
+        currentHealth = healthBar.getCurrentHealth();
+        Debug.Log("current health =  " + currentHealth);
     }
 
     // Update is called once per frame
@@ -307,9 +309,25 @@ public class CarController : MonoBehaviour
         if (other.gameObject.tag == "Player_Damage")
         {
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
+
             // hier kommt den Logik von Damage
-            healthBar.setHealthBarValue(.2f);
-            Debug.Log("Damage collider");
+            // MAX SPEED 30
+            Debug.Log("1 " + currentHealth);
+            if(currentVelocity > 0 && currentVelocity <= 5)
+            { healthBar.setHealthBarDamage(.02f); }
+            else if (currentVelocity > 5 && currentVelocity <= 10)
+            { healthBar.setHealthBarDamage(.04f); }
+            else if (currentVelocity > 10 && currentVelocity <= 15)
+            { healthBar.setHealthBarDamage(.06f); }
+            else if (currentVelocity > 15 && currentVelocity <= 20)
+            { healthBar.setHealthBarDamage(.08f); }
+            if (currentVelocity > 20 && currentVelocity <= 25)
+            { healthBar.setHealthBarDamage(.10f); }
+            if (currentVelocity > 25)
+            { healthBar.setHealthBarDamage(.12f); }
+
+            Debug.Log("2 " + currentHealth);
+
 
         }
     }
