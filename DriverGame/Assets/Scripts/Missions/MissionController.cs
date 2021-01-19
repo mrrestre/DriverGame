@@ -86,10 +86,12 @@ public class MissionController : MonoBehaviour
                 if(this.missionCounter != this.missionsList.Count)
                 {
                     endMissionScreen.gameObject.SetActive(true);
+                    /*
                     if (endMissionScreen.gameObject.activeInHierarchy)
                     {
                         StartCoroutine(LateCall());
                     }
+                    */
                 }
                 //Show all mission overview if that was the last mission
                 else
@@ -126,6 +128,7 @@ public class MissionController : MonoBehaviour
         }
     }
 
+    /*
     //Coroutine for EndScreen to disappear after "endMissionScreenTimer" seconds
     IEnumerator LateCall()
     {
@@ -134,4 +137,5 @@ public class MissionController : MonoBehaviour
         endMissionScreen.gameObject.SetActive(false);
         Time.timeScale = 1;
     }
+    */
 }

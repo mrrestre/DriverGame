@@ -294,26 +294,20 @@ public class CarController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
+        
         else if(other.gameObject.tag == "Player_Damage")
         {
+            /*
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
             healthBar.setHealthBarValue(.2f);
             Debug.Log("Damage collider");
-
-        }
-
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.tag == "Player_Damage")
-        {
+            */
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
 
             // hier kommt den Logik von Damage
             // MAX SPEED 30
             Debug.Log("1 " + currentHealth);
-            if(currentVelocity > 0 && currentVelocity <= 5)
+            if (currentVelocity > 0 && currentVelocity <= 5)
             { healthBar.setHealthBarDamage(.02f); }
             else if (currentVelocity > 5 && currentVelocity <= 10)
             { healthBar.setHealthBarDamage(.04f); }
@@ -328,8 +322,19 @@ public class CarController : MonoBehaviour
 
             Debug.Log("2 " + currentHealth);
 
+        }
+        
+
+    }
+
+/*    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Player_Damage")
+        {
+            
+
 
         }
     }
-
+*/
 }
