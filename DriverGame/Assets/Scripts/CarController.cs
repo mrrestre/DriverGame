@@ -17,7 +17,6 @@ public class CarController : MonoBehaviour
 
     // Health Bar reference
     public HealthBar healthBar;
-    public float currentHealth;
 
     ////////////////////////////////////
 
@@ -86,6 +85,19 @@ public class CarController : MonoBehaviour
 
     ////////////////////////////////////
 
+    [Header("Tire Trails")]
+
+    [SerializeField] private List<GameObject> tireTrails;
+
+    ////////////////////////////////////
+
+    [Header("Crashing")]
+
+    [SerializeField] private GameObject obstacleDissapears;
+    [SerializeField] private GameObject obstacleDamages;
+
+    ////////////////////////////////////
+
     [Header("Others")]
 
     //Gravity Modifier
@@ -93,6 +105,9 @@ public class CarController : MonoBehaviour
 
     //To define how far the wheels may turn
     [SerializeField] private float maxWheelTurn = 25f;
+
+    //How much Heatlth has the vehicle remaining
+    public float currentHealth;
 
     //Input for both axis
     private float turnInput;
@@ -153,6 +168,20 @@ public class CarController : MonoBehaviour
 
         //ensure the velocity never goes out of the backFinal/final boundaries
         currentVelocity = Mathf.Clamp(currentVelocity, backFinalVelocity, finalVelocity);
+
+        ////////////////////////Trails Manager////////////////////////
+        
+        //where should be the trails generated
+        if((currentVelocity <= finalVelocity * 0.5f && Input.GetAxis("Vertical") > 0) 
+            || (Mathf.Abs(currentLateralTilt) > lateralMaxTilt * 0.8f)
+            || (Input.GetAxis("Vertical") < 0))
+        {
+            SetEmitionOnAllWheels(true);
+        }
+        else if(currentVelocity > finalVelocity * 0.5f || Input.GetAxis("Vertical") <= 0)
+        {
+            SetEmitionOnAllWheels(false);
+        }
 
         ////////////////////////Acceleration Tilt////////////////////////
 
@@ -292,11 +321,17 @@ public class CarController : MonoBehaviour
         //If the other object should dissapear on contact
         if(other.gameObject.tag == "Obstacle_Dissapears")
         {
+            this.obstacleDissapears.GetComponent<AudioSource>().Play();
+            this.obstacleDissapears.GetComponent<ParticleSystem>().Play();
             other.gameObject.SetActive(false);
         }
         
         else if(other.gameObject.tag == "Player_Damage")
         {
+            this.obstacleDamages.GetComponent<AudioSource>().Play();
+            this.obstacleDamages.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+            this.obstacleDamages.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
+
             /*
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
             healthBar.setHealthBarValue(.2f);
@@ -327,14 +362,32 @@ public class CarController : MonoBehaviour
 
     }
 
-/*    private void OnCollisionEnter(Collision other)
+    public float GetCarSpeed()
     {
-        if (other.gameObject.tag == "Player_Damage")
+        return this.currentVelocity;
+    }
+
+    public float GetCarFinalSpeed()
+    {
+        return this.finalVelocity;
+    }
+
+    public void SetEmitionOnAllWheels(bool value)
+    {
+        for (int i = 0; i < tireTrails.Count; i++)
         {
-            
-
-
+            tireTrails[i].GetComponent<TrailRenderer>().emitting = value;
         }
     }
-*/
+
+    /*    private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.tag == "Player_Damage")
+            {
+
+
+
+            }
+        }
+    */
 }
