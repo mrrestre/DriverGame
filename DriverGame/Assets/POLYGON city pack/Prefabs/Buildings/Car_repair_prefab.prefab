@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4950470534877972}
   m_Layer: 0
   m_Name: wrench prefab (1)
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 64795370809954194}
   m_Layer: 0
   m_Name: wrench
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 64270791279655906}
   m_Layer: 0
   m_Name: wrench
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 64310221988388290}
   m_Layer: 0
   m_Name: Car_repair
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 4276166557813674}
   m_Layer: 0
   m_Name: wrench prefab
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

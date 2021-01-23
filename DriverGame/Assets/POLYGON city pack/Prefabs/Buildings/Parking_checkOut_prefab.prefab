@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 64514760569981668}
   m_Layer: 0
   m_Name: Parking_checkOut
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

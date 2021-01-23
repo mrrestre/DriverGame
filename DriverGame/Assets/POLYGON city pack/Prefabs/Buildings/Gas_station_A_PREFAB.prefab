@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 64962537987607460}
   m_Layer: 0
   m_Name: Gas_station_A
-  m_TagString: Untagged
+  m_TagString: Player_Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
