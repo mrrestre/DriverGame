@@ -139,6 +139,7 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        healthBar.changeHelathBarColor();
         ////////////////////////Speed Control////////////////////////
 
         //Set the right current Velocity each frame depending on the user input
@@ -340,8 +341,7 @@ public class CarController : MonoBehaviour
             sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
 
             // hier kommt den Logik von Damage
-            // MAX SPEED 30
-            Debug.Log("1 " + currentHealth);
+            // MAX SPEED 50
             if (currentVelocity > 0 && currentVelocity <= 5)
             { healthBar.setHealthBarDamage(.02f); }
             else if (currentVelocity > 5 && currentVelocity <= 10)
@@ -350,17 +350,22 @@ public class CarController : MonoBehaviour
             { healthBar.setHealthBarDamage(.06f); }
             else if (currentVelocity > 15 && currentVelocity <= 20)
             { healthBar.setHealthBarDamage(.08f); }
-            if (currentVelocity > 20 && currentVelocity <= 25)
+            else if (currentVelocity > 20 && currentVelocity <= 25)
             { healthBar.setHealthBarDamage(.10f); }
-            if (currentVelocity > 25)
+            else if (currentVelocity > 25)
             { healthBar.setHealthBarDamage(.12f); }
 
             Debug.Log("2 " + currentHealth);
 
         }
+        else if(other.gameObject.tag == "Bullet")
+        {
+            healthBar.setHealthBarDamage(.03f);
+        }
         
 
     }
+    
 
     public float GetCarSpeed()
     {

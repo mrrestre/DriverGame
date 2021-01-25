@@ -27,6 +27,15 @@ public class HealthBar : MonoBehaviour
         barImage = transform.Find("Bar").GetComponent<Image>();
     }
 
+    public void changeHelathBarColor()
+    {
+        barImage = transform.Find("Bar").GetComponent<Image>();
+        if(currentHealth <= .30f)
+        { 
+        barImage.color = new Color32(218, 40, 21, 100);
+        }
+    }
+
     public void setHealthBarFull()
     {
         this.currentHealth = 1f;
