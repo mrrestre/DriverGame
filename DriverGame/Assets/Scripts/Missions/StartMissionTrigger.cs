@@ -22,17 +22,22 @@ public class StartMissionTrigger : MonoBehaviour
             {
                 hasMissionStarted = true;
                 uiElement.SetActive(false);
- 
+                 /*
                 Time.timeScale = 0.5f;
                 InvokeRepeating("returnToNormalSpeed", 1f, 0.5f);
+                 */
             }
         }
     }
+
+    /*
     void returnToNormalSpeed()
     {
         Time.timeScale = 1f;
         CancelInvoke();
     }
+    */
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player_Car")
