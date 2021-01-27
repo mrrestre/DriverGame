@@ -88,6 +88,8 @@ public class Enemy : MonoBehaviour
             rb.AddForce(transform.up * 8f, ForceMode.Impulse);
             ///End of attack code
 
+            Destroy(rb.gameObject, 2.0f);
+
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
