@@ -9,8 +9,6 @@ public class StartMissionTrigger : MonoBehaviour
     [SerializeField] public GameObject uiElement;
 
 
-
-
     private void OnTriggerStay(Collider other)
     {
         
@@ -21,22 +19,13 @@ public class StartMissionTrigger : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 hasMissionStarted = true;
+
+                Debug.Log("Mission Started!");
+
                 uiElement.SetActive(false);
-                 /*
-                Time.timeScale = 0.5f;
-                InvokeRepeating("returnToNormalSpeed", 1f, 0.5f);
-                 */
             }
         }
     }
-
-    /*
-    void returnToNormalSpeed()
-    {
-        Time.timeScale = 1f;
-        CancelInvoke();
-    }
-    */
 
     private void OnTriggerExit(Collider other)
     {
