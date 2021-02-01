@@ -132,8 +132,6 @@ public class CarController : MonoBehaviour
         // for the Health bar
         healthBar.findImageBar();
         healthBar.setHealthBarFull();
-        currentHealth = healthBar.getCurrentHealth();
-        Debug.Log("current health =  " + currentHealth);
     }
 
     // Update is called once per frame
