@@ -23,14 +23,15 @@ public class MissionController : MonoBehaviour
 
     //Waypoint Logic
     public GameObject wayPointGameObject;
-    private WayPoint waypoint;
 
+    private WayPoint waypoint;
 
     // Start is called before the first frame update
     void Start()
     {
         countdown  = countDownGameObject.GetComponent<CountdownTimer>();
         waypoint   = wayPointGameObject.GetComponent<WayPoint>();
+
         startNextMission();
     }
 
@@ -101,8 +102,9 @@ public class MissionController : MonoBehaviour
                     //Go through a list of objects in any order (Hit enemies for example)
                     case SingleMission.MissionType.missionArrayOfObjectivesDissordered:
 
+       
                         //Every objective has been done
-                        if(currentMission.unorderedObjectives.Count == 0)
+                        if (currentMission.unorderedObjectives.Count == 0)
                         {
                             currentMission.hasMissionEnded = true;
                         }
@@ -111,6 +113,7 @@ public class MissionController : MonoBehaviour
                             //Go through every element
                             for (int i = 0; i < currentMission.unorderedObjectives.Count; i++)
                             {
+                                
                                 //If an objective was touched increase the counter
                                 if (currentMission.unorderedObjectives[i].GetComponent<SingleObject>().objectTouched == true)
                                 {
@@ -122,11 +125,13 @@ public class MissionController : MonoBehaviour
 
                                     //Increase the counter
                                     currentMission.unorderedObjectiveCounter++;
+
                                 }
                                 else
                                 {
                                     //If objective not yet reached, it stays active
                                     currentMission.unorderedObjectives[i].SetActive(true);
+
                                 }
                             }
                         }

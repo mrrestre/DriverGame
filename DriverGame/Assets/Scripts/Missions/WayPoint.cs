@@ -9,7 +9,7 @@ public class WayPoint : MonoBehaviour
     private Text distanceText;
 
     public Transform player;
-    private Transform target;
+    public Transform target;
     public Camera cam;
 
     public float closeEnoughDist;
