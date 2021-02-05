@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/External Assets/POLYGON city pack/Scenes/CleanScene.unity
+- path: Assets/Scenes/CleanScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
