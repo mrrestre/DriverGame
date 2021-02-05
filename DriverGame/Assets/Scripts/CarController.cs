@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CarController : MonoBehaviour
 {
@@ -96,6 +97,12 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject obstacleDissapears;
     [SerializeField] private GameObject obstacleDamages;
 
+    ////////////////////////////////////
+
+    [Header("Coins")]
+
+    private float collectedCoins = 0;
+    [SerializeField] private TextMeshProUGUI textCoins;
     ////////////////////////////////////
 
     [Header("Others")]
@@ -360,7 +367,14 @@ public class CarController : MonoBehaviour
         {
             healthBar.setHealthBarDamage(.03f);
         }
-        
+        else if (other.gameObject.tag == "Coins")
+        {
+            collectedCoins++;
+            textCoins.text = collectedCoins.ToString();
+            other.gameObject.SetActive(false);
+            Debug.Log("Coins" + textCoins.text);
+        }
+
 
     }
     
