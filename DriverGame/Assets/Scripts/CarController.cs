@@ -18,7 +18,9 @@ public class CarController : MonoBehaviour
 
     // Health Bar reference
     public HealthBar healthBar;
-
+    [SerializeField] private GameObject noLivesScreen;
+    //How much Heatlth has the vehicle remaining
+    public float currentHealth;
     ////////////////////////////////////
 
     [Header("Speed Managment")]
@@ -113,8 +115,7 @@ public class CarController : MonoBehaviour
     //To define how far the wheels may turn
     [SerializeField] private float maxWheelTurn = 25f;
 
-    //How much Heatlth has the vehicle remaining
-    public float currentHealth;
+    
 
     //Input for both axis
     private float turnInput;
@@ -145,6 +146,11 @@ public class CarController : MonoBehaviour
     void Update()
     {
         healthBar.changeHelathBarColor();
+
+        if (healthBar.getCurrentHealth() <= 0)
+        {
+            noLivesScreen.SetActive(true);
+        }
         ////////////////////////Speed Control////////////////////////
 
         //Set the right current Velocity each frame depending on the user input
