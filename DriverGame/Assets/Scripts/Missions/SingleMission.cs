@@ -33,7 +33,7 @@ public class SingleMission : MonoBehaviour
     public GameObject endMissionScreen;
 
     //How long the end mission overview is shown
-    public int endMissionScreenTimer = 4;
+    private int endMissionScreenTimer = 3;
 
     //Empty game Object where all the enemies of a given mission are child objects
     public GameObject enemiesFolder;
@@ -91,7 +91,7 @@ public class SingleMission : MonoBehaviour
     //Coroutine for EndScreen to disappear after "endMissionScreenTimer" seconds
     IEnumerator LateCall()
     {
-        Time.timeScale = 0.5f;
+        Time.timeScale = 0.8f;
         yield return new WaitForSeconds(endMissionScreenTimer);
         endMissionScreen.gameObject.SetActive(false);
         Time.timeScale = 1;

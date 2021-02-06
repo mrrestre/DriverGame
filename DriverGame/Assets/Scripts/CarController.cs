@@ -19,8 +19,10 @@ public class CarController : MonoBehaviour
     // Health Bar reference
     public HealthBar healthBar;
     [SerializeField] private GameObject noLivesScreen;
+    
     //How much Heatlth has the vehicle remaining
     public float currentHealth;
+
     ////////////////////////////////////
 
     [Header("Speed Managment")]
@@ -103,8 +105,11 @@ public class CarController : MonoBehaviour
 
     [Header("Coins")]
 
-    private float collectedCoins = 0;
+
+    //Coins Management
+    public List<GameObject> collectedCoins = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI textCoins;
+    
     ////////////////////////////////////
 
     [Header("Others")]
@@ -349,7 +354,9 @@ public class CarController : MonoBehaviour
             healthBar.setHealthBarValue(.2f);
             Debug.Log("Damage collider");
             */
-            sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
+            sphereRigidBody.velocity = Vector3.zero;
+            sphereRigidBody.angularVelocity = Vector3.zero;
+            ResetAllMovementValues();
 
             // hier kommt den Logik von Damage
             // MAX SPEED 50
@@ -365,9 +372,6 @@ public class CarController : MonoBehaviour
             { healthBar.setHealthBarDamage(.10f); }
             else if (currentVelocity > 25)
             { healthBar.setHealthBarDamage(.12f); }
-
-            Debug.Log("2 " + currentHealth);
-
         }
         else if(other.gameObject.tag == "Bullet")
         {
@@ -375,13 +379,15 @@ public class CarController : MonoBehaviour
         }
         else if (other.gameObject.tag == "Coins")
         {
-            collectedCoins++;
-            textCoins.text = collectedCoins.ToString();
+            collectedCoins.Add(other.gameObject);
+            SetCollectedCoinsCounter(collectedCoins.Count);
             other.gameObject.SetActive(false);
-            Debug.Log("Coins" + textCoins.text);
         }
+    }
 
-
+    public void SetCollectedCoinsCounter(int collectedCoins)
+    {
+        textCoins.text = collectedCoins.ToString();
     }
     
 
@@ -401,6 +407,13 @@ public class CarController : MonoBehaviour
         {
             tireTrails[i].GetComponent<TrailRenderer>().emitting = value;
         }
+    }
+
+    public void ResetAllMovementValues()
+    {
+        currentVelocity = 0f;
+        currentAccelerationTilt = 0f;
+        currentLateralTilt = 0f;
     }
 
     /*    private void OnCollisionEnter(Collision other)

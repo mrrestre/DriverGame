@@ -10,6 +10,9 @@ public class MissionController : MonoBehaviour
     //Mission Counter
     private int missionCounter = 0;
 
+    //Done Mission list
+    public List<SingleMission> doneMissions = new List<SingleMission>();
+
     //Change during the game
     public SingleMission currentMission;
 
@@ -23,14 +26,24 @@ public class MissionController : MonoBehaviour
 
     //Waypoint Logic
     public GameObject wayPointGameObject;
-
     private WayPoint waypoint;
+
+    //Save system
+    public GameObject proccessControllerGameObject;
+    private ProccessController proccessController;
+
+    //Player
+    public GameObject player;
+    private CarController carController;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        countdown  = countDownGameObject.GetComponent<CountdownTimer>();
-        waypoint   = wayPointGameObject.GetComponent<WayPoint>();
+        countdown           = countDownGameObject.GetComponent<CountdownTimer>();
+        waypoint            = wayPointGameObject.GetComponent<WayPoint>();
+        proccessController  = proccessControllerGameObject.GetComponent<ProccessController>();
+        carController       = player.GetComponent<CarController>();
 
         startNextMission();
     }
@@ -143,6 +156,9 @@ public class MissionController : MonoBehaviour
             //Was the mission end element touched, then the mission is done
             if (currentMission.hasMissionEnded == true)
             {
+                //Add mission to the done mission
+                this.doneMissions.Add(currentMission);
+
                 Debug.Log("Mission " + currentMission.missionType + " Ended!");
 
                 //Stop Timer
@@ -175,6 +191,7 @@ public class MissionController : MonoBehaviour
                 {
                     currentMission.activeEndMissionScreen();
                 }
+
                 //Show all mission overview if that was the last mission
                 else
                 {
@@ -186,6 +203,9 @@ public class MissionController : MonoBehaviour
                     //TODO: create end screen
                     Time.timeScale = 0f;
                 }
+
+                //Save the current state
+                proccessController.SaveGame(player.transform.position, player.transform.rotation, carController.collectedCoins, this.doneMissions, carController.currentHealth);
 
 
                 //Start a new mission (If not all missions are done)
@@ -211,4 +231,5 @@ public class MissionController : MonoBehaviour
             waypoint.setTarget(currentMission.startObject.transform);
         }
     }   
+
 }
