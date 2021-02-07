@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SingleMission : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class SingleMission : MonoBehaviour
 
     //End screen for the given mission
     public GameObject endMissionScreen;
+    public GameObject endMissionTimeText;
+    public GameObject endMissionStars;
 
     //How long the end mission overview is shown
     private int endMissionScreenTimer = 3;
@@ -67,6 +70,10 @@ public class SingleMission : MonoBehaviour
         {
             this.hasMissionStarted = true;
         }
+        else if (startObject.GetComponent<StartMissionTrigger>().hasMissionStarted == false)
+        {
+            this.hasMissionStarted = false;
+        }
 
         if (missionType == MissionType.simpleMission)
         {
@@ -86,6 +93,19 @@ public class SingleMission : MonoBehaviour
     public void activeEndMissionScreen()
     {
         endMissionScreen.SetActive(true);
+        endMissionTimeText.GetComponent<TextMeshProUGUI>().text = completionTime.ToString() + " s";
+
+        endMissionStars.transform.GetChild(0).gameObject.SetActive(true);
+        
+        if(completionTime <= timeForMission * 0.3f)
+        {
+            endMissionStars.transform.GetChild(1).gameObject.SetActive(true);
+        }
+
+        if (completionTime <= timeForMission * 0.3f)
+        {
+            endMissionStars.transform.GetChild(2).gameObject.SetActive(true);
+        }
     }
 
     //Coroutine for EndScreen to disappear after "endMissionScreenTimer" seconds

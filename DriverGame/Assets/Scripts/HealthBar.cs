@@ -14,7 +14,7 @@ public class HealthBar : MonoBehaviour
         barImage = transform.Find("Bar").GetComponent<Image>();
     }
 
-    public void changeHelathBarColor()
+    public void changeHealthBarColor()
     {
         barImage = transform.Find("Bar").GetComponent<Image>();
         if (currentHealth <= .30f)
@@ -43,8 +43,10 @@ public class HealthBar : MonoBehaviour
 
     public void setHealthBarValue(float healthValue)
     {
-        getCurrentHealth();
-        barImage.fillAmount = getCurrentHealth() + healthValue;
+        //getCurrentHealth();
+        //barImage.fillAmount = getCurrentHealth() + healthValue;
+        this.currentHealth = healthValue;
+        barImage.fillAmount = healthValue;
     }
 
     public float getCurrentHealth()

@@ -4,29 +4,45 @@ using UnityEngine;
 
 public class MissionController : MonoBehaviour
 {
+    ////////////All Mission////////////
+
+    [Header("All Missions")]
+
     //Missions pool
     public List<SingleMission> missionsList = new List<SingleMission>();
 
     //Mission Counter
     private int missionCounter = 0;
 
-    //Done Mission list
-    public List<SingleMission> doneMissions = new List<SingleMission>();
+    ////////////Current Mission////////////
+
+    [Header("Current Missions")]
 
     //Change during the game
     public SingleMission currentMission;
 
+
+    ////////////Done Missions////////////
+
+    [Header("Done Missions")]
+
+    //Done Mission list
+    public List<SingleMission> doneMissions = new List<SingleMission>();
+
     private bool allMissionsDone = false;
+
 
     ////////External Scripts////////
 
+    [Header("External Components")]
+
     //Countdown Logic
     public GameObject countDownGameObject;
-    private CountdownTimer countdown;
+    public CountdownTimer countdown;
 
     //Waypoint Logic
     public GameObject wayPointGameObject;
-    private WayPoint waypoint;
+    public WayPoint waypoint;
 
     //Save system
     public GameObject proccessControllerGameObject;
@@ -36,6 +52,10 @@ public class MissionController : MonoBehaviour
     public GameObject player;
     private CarController carController;
 
+    //EndMissionScreen
+    public GameObject endGameScreen;
+    private EndGameMenu endGameMenu;
+
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +64,7 @@ public class MissionController : MonoBehaviour
         waypoint            = wayPointGameObject.GetComponent<WayPoint>();
         proccessController  = proccessControllerGameObject.GetComponent<ProccessController>();
         carController       = player.GetComponent<CarController>();
+        endGameMenu         = endGameScreen.GetComponent<EndGameMenu>();
 
         startNextMission();
     }
@@ -190,6 +211,7 @@ public class MissionController : MonoBehaviour
                 if(this.missionCounter != this.missionsList.Count)
                 {
                     currentMission.activeEndMissionScreen();
+                    carController.ResetAllMovementValues();
                 }
 
                 //Show all mission overview if that was the last mission
@@ -200,12 +222,15 @@ public class MissionController : MonoBehaviour
                     //Set the all missions done boolean to true
                     this.allMissionsDone = true;
 
-                    //TODO: create end screen
-                    Time.timeScale = 0f;
+                    endGameMenu.ActivateScreen();
                 }
 
                 //Save the current state
-                proccessController.SaveGame(player.transform.position, player.transform.rotation, carController.collectedCoins, this.doneMissions, carController.currentHealth);
+                proccessController.SaveGame( player.transform.position, 
+                                             player.transform.rotation, 
+                                             carController.GetCollectedCoins(), 
+                                             this.doneMissions, 
+                                             carController.healthBar.getCurrentHealth() );
 
 
                 //Start a new mission (If not all missions are done)

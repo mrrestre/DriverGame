@@ -6,7 +6,6 @@ using TMPro;
 public class CoinController : MonoBehaviour
 {
     private float rotateZ = 10.0f;
-    private float startPosition = 0.0f;
 
     // Start is called before the first frame update
     void Start()

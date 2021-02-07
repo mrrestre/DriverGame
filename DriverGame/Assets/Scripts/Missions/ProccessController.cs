@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ProccessController : MonoBehaviour
 {
+    //Singleton Implementation
+    public static ProccessController instance;
+
     //Saves the current Position of the car, it start where the car normally starts
     private Vector3 autoPosition { get; set; }
 
@@ -11,7 +15,7 @@ public class ProccessController : MonoBehaviour
     private Quaternion autoRotation { get; set; }
 
     //Saves how many coins the player has collected
-    private List<GameObject> collectedCoins { get; set; }
+    [SerializeField] private List<GameObject> collectedCoins = new List<GameObject>();
 
     //Saves which missions are already done
     private List<SingleMission> doneMissions { get; set; }
@@ -21,24 +25,53 @@ public class ProccessController : MonoBehaviour
 
     //Reference to the player
     public GameObject player;
+    private CarController carController;
 
     //Reference to the sphere that moves the car
     public GameObject playerSphere;
 
     //Reference to the mission Controller
-    public GameObject missionController;
+    public GameObject missionControllerObject;
+    private MissionController missionController;
 
     //Reference to the all the coins
+    public Transform coinsFolder;
     public List<GameObject> allCoins;
+    [SerializeField] private TextMeshProUGUI textAllCoins;
+
+    //Singleton Implementation
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     // Write the staring data of the game
     void Start()
     {
+        missionController = missionControllerObject.GetComponent<MissionController>();
+        carController = player.GetComponent<CarController>();
+
         autoPosition = new Vector3(184.5f, 1.12845f, 6.805f);
         autoRotation = new Quaternion(0f, 0f, 0f, 0f);
         collectedCoins = new List<GameObject>();
         currentHealth = 1f;
+
+        foreach (Transform child in coinsFolder)
+        {
+            allCoins.Add(child.gameObject);
+        }
+
+        textAllCoins.text = "/" + allCoins.Count.ToString();
+
+        ActiveNotCollectedCoins();
     }
 
     //Function to save the current progress
@@ -61,15 +94,25 @@ public class ProccessController : MonoBehaviour
         playerSphere.transform.position = this.autoPosition;
         
         player.transform.rotation = this.autoRotation;
-        player.GetComponent<CarController>().ResetAllMovementValues();
+        carController.ResetAllMovementValues();
 
-        player.GetComponent<CarController>().collectedCoins = this.collectedCoins;
-        player.GetComponent<CarController>().SetCollectedCoinsCounter(this.collectedCoins.Count);
-        player.GetComponent<CarController>().healthBar.setHealthBarValue(this.currentHealth);
+        carController.SetCollectedCoins(this.collectedCoins);
+        carController.SetCollectedCoinsCounter(this.collectedCoins.Count);
 
-        missionController.GetComponent<MissionController>().doneMissions = this.doneMissions;
+        carController.healthBar.setHealthBarValue(this.currentHealth);
+
+        missionController.doneMissions = this.doneMissions;
 
         ActiveNotCollectedCoins();
+
+        if(missionController.currentMission.hasMissionStarted)
+        {
+            Debug.Log("Mission Was Running");
+            missionController.currentMission.startObject.GetComponent<StartMissionTrigger>().hasMissionStarted = false;
+            missionController.countdown.stopTimer();
+            missionController.currentMission.startObject.SetActive(true);
+            missionController.waypoint.setTarget(missionController.GetComponent<MissionController>().currentMission.startObject.transform);
+        }
     }
 
     public void ActiveNotCollectedCoins()

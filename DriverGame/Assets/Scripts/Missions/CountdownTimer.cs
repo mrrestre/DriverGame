@@ -16,6 +16,9 @@ public class CountdownTimer : MonoBehaviour
     //Screen when the timer reaches zero
     public GameObject countdownFailedScreen;
 
+    //To activate the right screens
+    private MissionFailedMenu missionFailedMenu;
+
     //StopWatch to keep track of the time elapsed
     public Stopwatch timer;
 
@@ -23,6 +26,7 @@ public class CountdownTimer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        missionFailedMenu = countdownFailedScreen.GetComponent<MissionFailedMenu>();
         textDisplay.GetComponent<Text>().text = "00:00";
         timer = new Stopwatch();
     }
@@ -44,7 +48,6 @@ public class CountdownTimer : MonoBehaviour
         CancelInvoke("controlTimerOnScreen");
         textDisplay.GetComponent<Text>().text = "00:00";
     }
-
 
     void controlTimerOnScreen()
     {
@@ -76,89 +79,7 @@ public class CountdownTimer : MonoBehaviour
 
         if (remainingTime == 0)
         {
-            countdownFailedScreen.gameObject.SetActive(true);
+            missionFailedMenu.ActivateScreen();
         }
     }
 }
-
-/*
- * public class CountdownTimer : MonoBehaviour
-{
-    //The Text which is shown on the top part of the screen
-    public GameObject textDisplay;
-    
-    //Depends on the current Mission
-    private int remainingTime;
-
-    //Screen when the timer reaches zero
-    public GameObject countdownFailedScreen;
-
-    Coroutine lastCoroutine = null;
-
-    //Trigger to end the screen
-    private bool endElementReached = false;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        textDisplay.GetComponent<Text>().text = "0:00";
-    }
-
-    public void startTimer(int howLongTimer)
-    {
-        this.remainingTime = howLongTimer;
-
-        lastCoroutine = StartCoroutine(TimerTake());
-    }
-
-    public void stopTimer()
-    {
-        endElementReached = true;
-        lastCoroutine = null;
-    }
-
-
-    IEnumerator TimerTake()
-    {       
-        if(!endElementReached)
-        {
-            yield return new WaitForSeconds(1);
-            remainingTime -= 1;
-
-            if (remainingTime >= 60)
-            {
-                string remaingSeconds;
-
-                if (remainingTime % 60 > 9)
-                {
-                    remaingSeconds = ":" + remainingTime % 60;
-                }
-                else
-                {
-                    remaingSeconds = ":0" + remainingTime % 60;
-                }
-
-                textDisplay.GetComponent<Text>().text = Mathf.Floor(remainingTime / 60) + remaingSeconds;
-            }
-            else if (remainingTime < 59)
-            {
-                textDisplay.GetComponent<Text>().text = "00:" + remainingTime;
-            }
-            else if (remainingTime < 10)
-            {
-                textDisplay.GetComponent<Text>().text = "00:0" + remainingTime;
-            }
-
-            if (remainingTime == 0)
-            {
-                countdownFailedScreen.gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            textDisplay.GetComponent<Text>().text = "0:00";
-        }
-    }
-}
-*/

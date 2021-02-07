@@ -18,10 +18,10 @@ public class CarController : MonoBehaviour
 
     // Health Bar reference
     public HealthBar healthBar;
-    [SerializeField] private GameObject noLivesScreen;
-    
-    //How much Heatlth has the vehicle remaining
-    public float currentHealth;
+    [SerializeField] private GameObject noHealthScreen;
+
+    //To activate the right screens
+    private MissionFailedMenu missionFailedMenu;
 
     ////////////////////////////////////
 
@@ -57,6 +57,16 @@ public class CarController : MonoBehaviour
 
     //Definition of the different forces when moving forward
     private float initialVelocity = 0.0f;
+
+    ////////////////////////////////////
+
+    [Header("Handbrake")]
+    
+    //Only true if the space bar is down
+    public bool handbrake = false;
+
+    //Determine how hard the turns would be with the handbrake on
+    public float handbrakeTurnMultiplier;
 
     ////////////////////////////////////
 
@@ -105,9 +115,8 @@ public class CarController : MonoBehaviour
 
     [Header("Coins")]
 
-
     //Coins Management
-    public List<GameObject> collectedCoins = new List<GameObject>();
+    private List<GameObject> collectedCoins = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI textCoins;
     
     ////////////////////////////////////
@@ -142,60 +151,130 @@ public class CarController : MonoBehaviour
         //For the tilting of the car
         currentLateralTilt = tiltingPart.transform.rotation.z;
 
+        //Select the reference to the no health menu
+        missionFailedMenu = noHealthScreen.GetComponent<MissionFailedMenu>();
+
         // for the Health bar
         healthBar.findImageBar();
         healthBar.setHealthBarFull();
+
+        handbrake = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthBar.changeHelathBarColor();
+        ////////////////////////Health Control////////////////////////
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            handbrake = true;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            handbrake = false;
+        }
+
+        ////////////////////////Health Control////////////////////////
+
+        healthBar.changeHealthBarColor();
 
         if (healthBar.getCurrentHealth() <= 0)
         {
-            noLivesScreen.SetActive(true);
+            missionFailedMenu.ActivateScreen();
         }
+        
         ////////////////////////Speed Control////////////////////////
 
         //Set the right current Velocity each frame depending on the user input
         if (Input.GetAxis("Vertical") > 0)
         {
             currentVelocity = currentVelocity + (accelerationRate * Time.deltaTime);
+
+            if(handbrake)
+            {
+                currentVelocity = currentVelocity + ((accelerationRate * Time.deltaTime) / 2f);
+            }
         }
         else if (Input.GetAxis("Vertical") < 0)
         {
             //Works as an extra brake
             if(currentVelocity > 0)
             {
-                currentVelocity = currentVelocity - ((backAccelerationRate + decelerationRate) * Time.deltaTime);
+                if (handbrake)
+                {
+                    currentVelocity = currentVelocity * 0.9f;
+                }
+                else
+                {
+                    currentVelocity = currentVelocity - ((backAccelerationRate + decelerationRate) * Time.deltaTime);
+                }
             }
             //Start reversing
             else
             {
-                currentVelocity = currentVelocity - (backAccelerationRate * Time.deltaTime);
+                if (handbrake)
+                {
+                    currentVelocity = currentVelocity * 0.9f;
+                }
+                else
+                {
+                    currentVelocity = currentVelocity - (backAccelerationRate * Time.deltaTime);
+                }
             }
         }
         //Return to zero speed if not a vertical input found
         else
         {
-            currentVelocity = currentVelocity - (decelerationRate * Time.deltaTime);
+            if (handbrake)
+            {
+                currentVelocity = currentVelocity - (decelerationRate * 2f * Time.deltaTime);
+            }
+            else
+            {
+                currentVelocity = currentVelocity - (decelerationRate * Time.deltaTime);
+            }
+
             currentVelocity = Mathf.Clamp(currentVelocity, initialVelocity, finalVelocity);
         }
 
         //ensure the velocity never goes out of the backFinal/final boundaries
         currentVelocity = Mathf.Clamp(currentVelocity, backFinalVelocity, finalVelocity);
 
+        ////////////////////////Turning Control////////////////////////
+
+        //Lateral movement with input
+        turnInput = Input.GetAxis("Horizontal");
+
+        //Defines how the turning works when going forwards
+        if (currentVelocity > 0f)
+        {
+            if (handbrake)
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * handbrakeTurnMultiplier * Time.deltaTime * currentVelocity, 0f));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * currentVelocity, 0f));
+            }
+        }
+
+        //Defines how the turning works when going backwards
+        if (currentVelocity < -5f)
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * backTurnStrength * Time.deltaTime * Input.GetAxis("Vertical"), 0f));
+        }
+
         ////////////////////////Trails Manager////////////////////////
-        
+
         //where should be the trails generated
-        if((currentVelocity <= finalVelocity * 0.5f && Input.GetAxis("Vertical") > 0) 
-            || (Mathf.Abs(currentLateralTilt) > lateralMaxTilt * 0.8f)
-            || (Input.GetAxis("Vertical") < 0))
+        if ((currentVelocity <= finalVelocity * 0.5f && Input.GetAxis("Vertical") > 0f) 
+            || (Mathf.Abs(currentLateralTilt) > lateralMaxTilt * 0.9f)
+            || (Input.GetAxis("Vertical") < 0f)
+            || handbrake)
         {
             SetEmitionOnAllWheels(true);
         }
-        else if(currentVelocity > finalVelocity * 0.5f || Input.GetAxis("Vertical") <= 0)
+        else if(currentVelocity > finalVelocity * 0.5f || Input.GetAxis("Vertical") <= 0f)
         {
             SetEmitionOnAllWheels(false);
         }
@@ -205,10 +284,10 @@ public class CarController : MonoBehaviour
         //If the car has not reached the maximun tilting possible (Eather way)
         if (Mathf.Abs(currentAccelerationTilt) <= accelerationMaxTilt)
         {
-            if(Input.GetAxis("Vertical") != 0)
+            if(Input.GetAxis("Vertical") != 0f)
             {
                 //is the car Accelerating
-                if (Input.GetAxis("Vertical") > 0)
+                if (Input.GetAxis("Vertical") > 0f)
                 {
                     currentAccelerationTilt = currentAccelerationTilt - accelerationTiltingFactor;
 
@@ -216,7 +295,7 @@ public class CarController : MonoBehaviour
                 }
 
                 //is the car braking (Not going backwards)
-                else if (Input.GetAxis("Vertical") < 0)
+                else if (Input.GetAxis("Vertical") < 0 || handbrake)
                 {
                     currentAccelerationTilt = currentAccelerationTilt + accelerationTiltingFactor;
 
@@ -224,7 +303,6 @@ public class CarController : MonoBehaviour
                 }
             }   
         }
-        
 
         //Return the tilt to zero if no input found and the car is tilted
         if (Input.GetAxis("Vertical") == 0)
@@ -242,22 +320,7 @@ public class CarController : MonoBehaviour
         }
 
 
-        ////////////////////////Turning Control////////////////////////
-
-        //Lateral movement with input
-        turnInput = Input.GetAxis("Horizontal");
-
-        //Defines how the turning works when going forwards
-        if (currentVelocity > 0)
-        {
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * currentVelocity, 0f));
-        }
-
-        //Defines how the turning works when going backwards
-        if (currentVelocity < 0)
-        {
-           transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * backTurnStrength * Time.deltaTime * Input.GetAxis("Vertical"), 0f));
-        }
+        
 
         ////////////////////////Turning Tilt////////////////////////
 
@@ -328,8 +391,16 @@ public class CarController : MonoBehaviour
         //Move the sphere forward and backward
         if (Mathf.Abs(currentVelocity) > 0)
         {
-            //Apply force to the Sphere
-            sphereRigidBody.AddForce(transform.forward * currentVelocity, ForceMode.Acceleration);
+            if(handbrake)
+            {
+                //Apply force to the Sphere
+                sphereRigidBody.AddForce(transform.forward * currentVelocity * 0.9f, ForceMode.Acceleration);
+            }
+            else
+            {
+                //Apply force to the Sphere
+                sphereRigidBody.AddForce(transform.forward * currentVelocity, ForceMode.Acceleration);
+            }
         }
     }
 
@@ -349,15 +420,6 @@ public class CarController : MonoBehaviour
             this.obstacleDamages.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             this.obstacleDamages.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
 
-            /*
-            sphereRigidBody.velocity.Scale(new Vector3(0, 0, 0));
-            healthBar.setHealthBarValue(.2f);
-            Debug.Log("Damage collider");
-            */
-            sphereRigidBody.velocity = Vector3.zero;
-            sphereRigidBody.angularVelocity = Vector3.zero;
-            ResetAllMovementValues();
-
             // hier kommt den Logik von Damage
             // MAX SPEED 50
             if (currentVelocity > 0 && currentVelocity <= 5)
@@ -372,6 +434,8 @@ public class CarController : MonoBehaviour
             { healthBar.setHealthBarDamage(.10f); }
             else if (currentVelocity > 25)
             { healthBar.setHealthBarDamage(.12f); }
+
+            ResetAllMovementValues();
         }
         else if(other.gameObject.tag == "Bullet")
         {
@@ -379,7 +443,7 @@ public class CarController : MonoBehaviour
         }
         else if (other.gameObject.tag == "Coins")
         {
-            collectedCoins.Add(other.gameObject);
+            AddCoinToCollectedCoins(other.gameObject);
             SetCollectedCoinsCounter(collectedCoins.Count);
             other.gameObject.SetActive(false);
         }
@@ -414,16 +478,22 @@ public class CarController : MonoBehaviour
         currentVelocity = 0f;
         currentAccelerationTilt = 0f;
         currentLateralTilt = 0f;
+        sphereRigidBody.velocity = Vector3.zero;
+        sphereRigidBody.angularVelocity = Vector3.zero;
     }
 
-    /*    private void OnCollisionEnter(Collision other)
-        {
-            if (other.gameObject.tag == "Player_Damage")
-            {
+    public void SetCollectedCoins(List<GameObject> coins)
+    {
+        this.collectedCoins = coins;
+    }
 
+    public List<GameObject> GetCollectedCoins()
+    {
+        return this.collectedCoins;
+    }
 
-
-            }
-        }
-    */
+    public void AddCoinToCollectedCoins(GameObject coin)
+    {
+        this.collectedCoins.Add(coin);
+    }
 }
