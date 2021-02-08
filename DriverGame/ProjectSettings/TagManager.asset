@@ -11,6 +11,7 @@ TagManager:
   - Player_Damage
   - Bullet
   - Coins
+  - SpeedBoost
   layers:
   - Default
   - TransparentFX

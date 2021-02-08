@@ -134,6 +134,12 @@ public class CarController : MonoBehaviour
     //Input for both axis
     private float turnInput;
 
+    //vars for SpeedBoost
+
+    private float boosttimer;
+    private bool speedboosting;
+    private bool gravityboosting;
+
     ////////////////////////////////////
 
     // Start is called before the first frame update
@@ -159,13 +165,46 @@ public class CarController : MonoBehaviour
         healthBar.setHealthBarFull();
 
         handbrake = false;
+
+        boosttimer = 0;
+        speedboosting = false;
+        gravityboosting = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        ////////////////////////Power-Ups//////////////////////////////
+
+        ///////////////////////Speed-Boost/////////////////////////////
+        if (speedboosting)
+        {
+            boosttimer += Time.deltaTime;
+            if (boosttimer >= 6)
+            {
+                accelerationRate = 8f;
+                finalVelocity = 50f;
+                boosttimer = 0;
+                speedboosting = false;
+            }
+        }
+
+        /////////////////////////Gravity///////////////////////////////
+
+        if (gravityboosting)
+        {
+            boosttimer += Time.deltaTime;
+            if (boosttimer >= 4)
+            {
+                gravityModifier = 5;
+                boosttimer = 0;
+                gravityboosting = false;
+            }
+        }
+
+
         ////////////////////////Health Control////////////////////////
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             handbrake = true;
         }
@@ -406,8 +445,25 @@ public class CarController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // SpeedBoost
+        if (other.tag == "SpeedBoost")
+        {
+            speedboosting = true;
+            accelerationRate = 16f;
+            finalVelocity = 70f;
+            Destroy(other.gameObject);
+        }
+
+        // Gravity Boost
+        if (other.tag == "GravityBoost")
+        {
+            gravityboosting = true;
+            gravityModifier = 1;
+            Destroy(other.gameObject);
+        }
+
         //If the other object should dissapear on contact
-        if(other.gameObject.tag == "Obstacle_Dissapears")
+        if (other.gameObject.tag == "Obstacle_Dissapears")
         {
             this.obstacleDissapears.GetComponent<AudioSource>().Play();
             this.obstacleDissapears.GetComponent<ParticleSystem>().Play();
