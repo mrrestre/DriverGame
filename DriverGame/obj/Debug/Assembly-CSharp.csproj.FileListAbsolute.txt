@@ -1,0 +1,2 @@
+D:\Unity Projects\ProjectBA5\DriverGame\DriverGame\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\Unity Projects\ProjectBA5\DriverGame\DriverGame\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

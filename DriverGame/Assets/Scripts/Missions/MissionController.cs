@@ -82,7 +82,10 @@ public class MissionController : MonoBehaviour
                 currentMission.startObject.gameObject.SetActive(false);
 
                 //Start Timer
-                countdown.startTimer(currentMission.timeForMission);
+                if(!countdown.hasMissionStarted)
+                {
+                    countdown.StartCountdown(currentMission.timeForMission);
+                }
 
                 //If the mission has any enemies, activate them
                 if (currentMission.isThereEnemies == true)
@@ -182,12 +185,12 @@ public class MissionController : MonoBehaviour
 
                 Debug.Log("Mission " + currentMission.missionType + " Ended!");
 
-                //Stop Timer
-                countdown.stopTimer();
-
                 //Write how long was needed to complete the mission
-                currentMission.completionTime = (int)countdown.timer.Elapsed.TotalSeconds;
+                currentMission.completionTime = (int)countdown.elapsedTime;
                 Debug.Log("Time needed to end mission " + currentMission.completionTime);
+
+                //Stop Timer
+                countdown.StopCountdown();
 
                 //If the mission has any enemies, activate them
                 if (currentMission.isThereEnemies == true)

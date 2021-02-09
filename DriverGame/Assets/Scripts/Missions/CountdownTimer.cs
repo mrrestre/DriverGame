@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +7,19 @@ using UnityEngine.UI;
 public class CountdownTimer : MonoBehaviour
 {
     //The Text which is shown on the top part of the screen
-    public GameObject textDisplay;
-    
+    public GameObject textGameObject;
+    private Text countdownText;
+
     //Depends on the current Mission
-    private int remainingTime;
+    public float timeForMission;
+    public float remainingTime;
+    public float elapsedTime = 0f;
+
+    //Determines if the mission has started
+    public bool hasMissionStarted;
+
+    //Determines if the countdown is running
+    public bool isCountdownRunning;
 
     //Screen when the timer reaches zero
     public GameObject countdownFailedScreen;
@@ -19,101 +27,130 @@ public class CountdownTimer : MonoBehaviour
     //To activate the right screens
     private MissionFailedMenu missionFailedMenu;
 
-    //StopWatch to keep track of the time elapsed
-    public Stopwatch timer;
-
     //PowerUp Timer
-    private float boosttimer;
-    private bool timerboosting;
+    private float boostTimer;
+    private bool timerBoosting;
 
     // Start is called before the first frame update
     void Start()
     {
+        textGameObject = this.gameObject;
         missionFailedMenu = countdownFailedScreen.GetComponent<MissionFailedMenu>();
-        textDisplay.GetComponent<Text>().text = "00:00";
-        timer = new Stopwatch();
-
-        boosttimer = 0;
-        timerboosting = false;
+        countdownText = textGameObject.GetComponent<Text>();
     }
 
-  /*  private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        ///////////////////////Timer-Boost/////////////////////////////
-        if (timerboosting)
+        if(hasMissionStarted)
         {
-            boosttimer += Time.deltaTime;
-            if (boosttimer >= 10)
+            if(isCountdownRunning)
             {
-                boosttimer = 0;
-                timerboosting = false;
-            }
-        }
-    }
-
-  /*  private void OnTriggerEnter(Collider other)
-    {
-        // TimerBoost
-        if (other.tag == "TimerBoost")
-        {
-            timerboosting = true;
-            Destroy(other.gameObject);
-        }
-    }*/
-
-    public void startTimer(int howLongTimer)
-    {
-        this.remainingTime = howLongTimer;
-
-        if(!timer.IsRunning)
-        {
-            timer.Start();
-            InvokeRepeating("controlTimerOnScreen", 0f, 1.0f);
-        }
-    }
-
-    public void stopTimer()
-    {
-        timer.Stop();
-        CancelInvoke("controlTimerOnScreen");
-        textDisplay.GetComponent<Text>().text = "00:00";
-    }
-
-    void controlTimerOnScreen()
-    {
-
-            remainingTime = remainingTime - (int)timer.Elapsed.TotalSeconds;
-        
-
-
-            if (remainingTime >= 60)
-            {
-                string remaingSecondsString;
-
-                if (remainingTime % 60 > 9)
+                elapsedTime += Time.deltaTime;
+                remainingTime = Mathf.Round(timeForMission - elapsedTime);
+                UpdateCountdownOnScreen();
+                
+                if (remainingTime == 0)
                 {
-                    remaingSecondsString = ":" + remainingTime % 60;
+                    missionFailedMenu.ActivateScreen();
+                    StopCountdown();
                 }
-                else
-                {
-                    remaingSecondsString = ":0" + remainingTime % 60;
-                }
+            }
+            else
+            {
+                UpdateCountdownOnScreen();
+            }
+        }
+        else
+        {
+            countdownText.text = "00:00";
+        }
+    }
 
-                textDisplay.GetComponent<Text>().text = "0" + Mathf.Floor(remainingTime / 60) + remaingSecondsString;
-            }
-            else if (remainingTime < 59)
-            {
-                textDisplay.GetComponent<Text>().text = "00:" + remainingTime;
-            }
-            else if (remainingTime < 10)
-            {
-                textDisplay.GetComponent<Text>().text = "00:0" + remainingTime;
-            }
+    public void StartCountdown(int howLongTimer)
+    {
+        Debug.Log("Countdown Started");
 
-            if (remainingTime == 0)
-            {
-                missionFailedMenu.ActivateScreen();
-            }
+        this.timeForMission = howLongTimer;
+
+        this.hasMissionStarted = true;
+        this.isCountdownRunning = true;
+    }
+
+    public void PauseCountdown()
+    {
+        Debug.Log("Countdown Paused");
+
+        this.isCountdownRunning = false;
+    }
+
+    public void ResumeCountdown()
+    {
+        Debug.Log("Countdown Resumed");
+
+        this.isCountdownRunning = true;
+    }
+
+    public void StopCountdown()
+    {
+        Debug.Log("Countdown Stopped");
+
+        this.hasMissionStarted = false;
+        this.isCountdownRunning = false;
+        this.elapsedTime = 0f;
+        this.remainingTime = 0f;
+        this.timeForMission = 0f;
+    }
+
+
+    void UpdateCountdownOnScreen()
+    {
+        if (this.remainingTime >= 60)
+        {
+            string remaingSecondsString;
         
+            if (this.remainingTime % 60 > 9)
+            {
+                remaingSecondsString = ":" + remainingTime % 60;
+            }
+            else
+            {
+                remaingSecondsString = ":0" + remainingTime % 60;
+            }
+
+            countdownText.text = "0" + Mathf.Floor(remainingTime / 60) + remaingSecondsString;
+        }
+        else if (this.remainingTime < 60 && this.remainingTime > 9)
+        {
+            countdownText.text = "00:" + remainingTime;
+        }
+        else if (this.remainingTime < 10)
+        {
+            countdownText.text = "00:0" + remainingTime;
+        }
     }
 }
+
+/*  private void Update()
+  {
+      ///////////////////////Timer-Boost/////////////////////////////
+      if (timerboosting)
+      {
+          boosttimer += Time.deltaTime;
+          if (boosttimer >= 10)
+          {
+              boosttimer = 0;
+              timerboosting = false;
+          }
+      }
+  }
+
+/*  private void OnTriggerEnter(Collider other)
+  {
+      // TimerBoost
+      if (other.tag == "TimerBoost")
+      {
+          timerboosting = true;
+          Destroy(other.gameObject);
+      }
+  }*/

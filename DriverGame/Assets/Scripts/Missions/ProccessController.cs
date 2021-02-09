@@ -109,7 +109,7 @@ public class ProccessController : MonoBehaviour
         {
             Debug.Log("Mission Was Running");
             missionController.currentMission.startObject.GetComponent<StartMissionTrigger>().hasMissionStarted = false;
-            missionController.countdown.stopTimer();
+            missionController.countdown.StopCountdown();
             missionController.currentMission.startObject.SetActive(true);
             missionController.waypoint.setTarget(missionController.GetComponent<MissionController>().currentMission.startObject.transform);
         }
