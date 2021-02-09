@@ -56,7 +56,6 @@ public class MissionController : MonoBehaviour
     public GameObject endGameScreen;
     private EndGameMenu endGameMenu;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -66,7 +65,7 @@ public class MissionController : MonoBehaviour
         carController       = player.GetComponent<CarController>();
         endGameMenu         = endGameScreen.GetComponent<EndGameMenu>();
 
-        startNextMission();
+        StartNextMission();
     }
 
     // Update is called once per frame
@@ -237,12 +236,12 @@ public class MissionController : MonoBehaviour
 
 
                 //Start a new mission (If not all missions are done)
-                startNextMission();
+                StartNextMission();
             }
         }
     }
 
-    void startNextMission()
+    void StartNextMission()
     {
         //If all Missions are done
         if(this.missionCounter != this.missionsList.Count)
@@ -259,5 +258,4 @@ public class MissionController : MonoBehaviour
             waypoint.setTarget(currentMission.startObject.transform);
         }
     }   
-
 }

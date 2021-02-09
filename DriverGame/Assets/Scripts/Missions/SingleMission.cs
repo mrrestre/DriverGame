@@ -41,7 +41,6 @@ public class SingleMission : MonoBehaviour
     //Empty game Object where all the enemies of a given mission are child objects
     public GameObject enemiesFolder;
 
-
     ////////////Depending of the mission may be null////////////
 
     [Header("Simple Mission")]

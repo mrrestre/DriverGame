@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class CountdownTimer : MonoBehaviour
 {
     //The Text which is shown on the top part of the screen
     public GameObject textGameObject;
-    private Text countdownText;
+    private TextMeshProUGUI countdownText;
 
     //Depends on the current Mission
     public float timeForMission;
@@ -36,7 +37,7 @@ public class CountdownTimer : MonoBehaviour
     {
         textGameObject = this.gameObject;
         missionFailedMenu = countdownFailedScreen.GetComponent<MissionFailedMenu>();
-        countdownText = textGameObject.GetComponent<Text>();
+        countdownText = textGameObject.GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
