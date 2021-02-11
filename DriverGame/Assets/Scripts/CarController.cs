@@ -110,6 +110,8 @@ public class CarController : MonoBehaviour
 
     [SerializeField] private GameObject obstacleDissapears;
     [SerializeField] private GameObject obstacleDamages;
+    [SerializeField] private GameObject pickingCoin;
+    [SerializeField] private GameObject getShooted;
 
     ////////////////////////////////////
 
@@ -495,10 +497,12 @@ public class CarController : MonoBehaviour
         }
         else if(other.gameObject.tag == "Bullet")
         {
+            this.getShooted.GetComponent<AudioSource>().Play();
             healthBar.setHealthBarDamage(.03f);
         }
         else if (other.gameObject.tag == "Coins")
         {
+            this.pickingCoin.GetComponent<AudioSource>().Play();
             AddCoinToCollectedCoins(other.gameObject);
             SetCollectedCoinsCounter(collectedCoins.Count);
             other.gameObject.SetActive(false);
