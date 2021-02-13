@@ -5,6 +5,7 @@ using UnityEngine;
 public class GetCarTanked : MonoBehaviour
 {
     public HealthBar healthBar;
+    [SerializeField] private GameObject getRefuel;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +22,7 @@ public class GetCarTanked : MonoBehaviour
         if (other.gameObject.tag == "Player_Car")
         {
             healthBar.setHealthBarFull();
+            this.getRefuel.GetComponent<AudioSource>().Play();
         }
     }
 }

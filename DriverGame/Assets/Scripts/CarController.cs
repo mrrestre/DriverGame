@@ -112,6 +112,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject obstacleDamages;
     [SerializeField] private GameObject pickingCoin;
     [SerializeField] private GameObject getShooted;
+    [SerializeField] private GameObject playHorn_1;
+    [SerializeField] private GameObject playHorn_2;
+
 
     ////////////////////////////////////
 
@@ -176,6 +179,21 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ////////////////////////Play-Horn//////////////////////////////
+        if (Input.GetKeyDown("g"))
+        {
+            this.playHorn_1.GetComponent<AudioSource>().Play();
+        }
+        if (Input.GetKeyUp("g"))
+        {
+            this.playHorn_1.GetComponent<AudioSource>().Stop();
+        }
+        if (Input.GetKeyDown("h"))
+        {
+            this.playHorn_2.GetComponent<AudioSource>().Play();
+        }
+
+
         ////////////////////////Power-Ups//////////////////////////////
 
         ///////////////////////Speed-Boost/////////////////////////////
