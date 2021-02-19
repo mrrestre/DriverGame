@@ -23,6 +23,10 @@ public class CarController : MonoBehaviour
     //To activate the right screens
     private MissionFailedMenu missionFailedMenu;
 
+    //To be able to use the timer powerup
+    public GameObject timerComponent;
+    private CountdownTimer countdown;
+
     ////////////////////////////////////
 
     [Header("Speed Managment")]
@@ -112,8 +116,6 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject obstacleDamages;
     [SerializeField] private GameObject pickingCoin;
     [SerializeField] private GameObject getShooted;
-    [SerializeField] private GameObject playHorn_1;
-    [SerializeField] private GameObject playHorn_2;
 
 
     ////////////////////////////////////
@@ -134,7 +136,8 @@ public class CarController : MonoBehaviour
     //To define how far the wheels may turn
     [SerializeField] private float maxWheelTurn = 25f;
 
-    
+    [SerializeField] private GameObject playHorn_1;
+    [SerializeField] private GameObject playHorn_2;
 
     //Input for both axis
     private float turnInput;
@@ -144,6 +147,7 @@ public class CarController : MonoBehaviour
     private float boosttimer;
     private bool speedboosting;
     private bool gravityboosting;
+    private float howLongBoost;
 
     ////////////////////////////////////
 
@@ -165,6 +169,9 @@ public class CarController : MonoBehaviour
         //Select the reference to the no health menu
         missionFailedMenu = noHealthScreen.GetComponent<MissionFailedMenu>();
 
+        //Create reference to the countdown
+        countdown = timerComponent.GetComponent<CountdownTimer>();
+
         // for the Health bar
         healthBar.findImageBar();
         healthBar.setHealthBarFull();
@@ -180,15 +187,15 @@ public class CarController : MonoBehaviour
     void Update()
     {
         ////////////////////////Play-Horn//////////////////////////////
-        if (Input.GetKeyDown("g"))
+        if (Input.GetKeyDown("e"))
         {
             this.playHorn_1.GetComponent<AudioSource>().Play();
         }
-        if (Input.GetKeyUp("g"))
+        if (Input.GetKeyUp("e"))
         {
             this.playHorn_1.GetComponent<AudioSource>().Stop();
         }
-        if (Input.GetKeyDown("h"))
+        if (Input.GetKeyDown("q"))
         {
             this.playHorn_2.GetComponent<AudioSource>().Play();
         }
@@ -200,7 +207,7 @@ public class CarController : MonoBehaviour
         if (speedboosting)
         {
             boosttimer += Time.deltaTime;
-            if (boosttimer >= 6)
+            if (boosttimer >= howLongBoost)
             {
                 accelerationRate = 8f;
                 finalVelocity = 50f;
@@ -222,8 +229,8 @@ public class CarController : MonoBehaviour
             }
         }
 
-
-        ////////////////////////Health Control////////////////////////
+        ////////////////////////Handbrake Control////////////////////////
+       
         if (Input.GetKeyDown(KeyCode.Space))
         {
             handbrake = true;
@@ -469,8 +476,16 @@ public class CarController : MonoBehaviour
         if (other.tag == "SpeedBoost")
         {
             speedboosting = true;
-            accelerationRate = 16f;
-            finalVelocity = 70f;
+            accelerationRate = other.GetComponent<SpeedBoost>().accelerationRate;
+            finalVelocity = other.GetComponent<SpeedBoost>().finalVelocity;
+            howLongBoost = other.GetComponent<SpeedBoost>().howLong;
+            Destroy(other.gameObject);
+        }
+
+        // TimeBosst
+        if (other.tag == "TimeBoost")
+        {
+            countdown.elapsedTime = countdown.elapsedTime - other.GetComponent<TimePowerUp>().timeToAddToCountdown;
             Destroy(other.gameObject);
         }
 

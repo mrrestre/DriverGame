@@ -96,12 +96,12 @@ public class SingleMission : MonoBehaviour
 
         endMissionStars.transform.GetChild(0).gameObject.SetActive(true);
         
-        if(completionTime <= timeForMission * 0.3f)
+        if(completionTime <= timeForMission * 0.8f)
         {
             endMissionStars.transform.GetChild(1).gameObject.SetActive(true);
         }
 
-        if (completionTime <= timeForMission * 0.3f)
+        if (completionTime <= timeForMission * 0.5f)
         {
             endMissionStars.transform.GetChild(2).gameObject.SetActive(true);
         }
