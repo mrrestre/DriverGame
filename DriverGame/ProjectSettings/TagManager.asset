@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - Coins
   - SpeedBoost
+  - TimeBoost
   layers:
   - Default
   - TransparentFX
