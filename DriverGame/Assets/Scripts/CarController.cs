@@ -17,15 +17,19 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject tiltingPart;
 
     // Health Bar reference
-    public HealthBar healthBar;
+    [SerializeField] public HealthBar healthBar;
     [SerializeField] private GameObject noHealthScreen;
 
     //To activate the right screens
     private MissionFailedMenu missionFailedMenu;
 
     //To be able to use the timer powerup
-    public GameObject timerComponent;
+    [SerializeField] private GameObject timerComponent;
     private CountdownTimer countdown;
+
+    //Reference to get how many coins are there
+    [SerializeField] private GameObject proccesControllerRB;
+    private ProccessController proccessController;
 
     ////////////////////////////////////
 
@@ -122,10 +126,26 @@ public class CarController : MonoBehaviour
 
     [Header("Coins")]
 
+    //Are all coins collected
+    public bool areAllCoinsCollected = false;
+
     //Coins Management
     private List<GameObject> collectedCoins = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI textCoins;
     
+    //If all coins were collected this body will be activated
+    [SerializeField] private GameObject extraBody;
+    [SerializeField] private GameObject extraBodyLeftExhaust;
+    [SerializeField] private GameObject extraBodyRightExhaust;
+
+    ////////////////////////////////////
+
+    [Header("Exhausts")]
+
+    //Exhaust mangagement
+    public GameObject leftExhaust;
+    public GameObject rightExhaust;
+
     ////////////////////////////////////
 
     [Header("Others")]
@@ -176,16 +196,51 @@ public class CarController : MonoBehaviour
         healthBar.findImageBar();
         healthBar.setHealthBarFull();
 
+        //Handbrake start off
         handbrake = false;
 
+        //start emiting smoke from car (Go electric!)
+        leftExhaust.transform.GetChild(0).gameObject.SetActive(true);
+        rightExhaust.transform.GetChild(0).gameObject.SetActive(true);
+
+        //Power Ups
         boosttimer = 0;
         speedboosting = false;
         gravityboosting = false;
+
+        //Procces controller
+        proccessController = proccesControllerRB.GetComponent<ProccessController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        ////////////////////////Coins-Collection//////////////////////////////
+        if(GetCollectedCoins().Count == proccessController.allCoins.Count)
+        {
+            areAllCoinsCollected = true;
+        }
+
+        if(areAllCoinsCollected)
+        {
+            //Deactivate teh old body
+            tiltingPart.SetActive(false);
+
+            //Activate the new Body
+            extraBody.SetActive(true);
+
+            //Update the reference of what should tilt
+            tiltingPart = extraBody;
+
+            //Update the reference to the exhausts
+            leftExhaust = extraBodyLeftExhaust;
+            rightExhaust = extraBodyRightExhaust;
+
+            //start emiting smoke from car (Go electric!)
+            leftExhaust.transform.GetChild(0).gameObject.SetActive(true);
+            rightExhaust.transform.GetChild(0).gameObject.SetActive(true);
+        }
+
         ////////////////////////Play-Horn//////////////////////////////
         if (Input.GetKeyDown("e"))
         {
@@ -213,6 +268,14 @@ public class CarController : MonoBehaviour
                 finalVelocity = 50f;
                 boosttimer = 0;
                 speedboosting = false;
+
+                //Stop emiting Fire
+                leftExhaust.transform.GetChild(1).gameObject.SetActive(false);
+                rightExhaust.transform.GetChild(1).gameObject.SetActive(false);
+
+                //Start Emiting Smoke
+                leftExhaust.transform.GetChild(0).gameObject.SetActive(true);
+                rightExhaust.transform.GetChild(0).gameObject.SetActive(true);
             }
         }
 
@@ -480,6 +543,14 @@ public class CarController : MonoBehaviour
             finalVelocity = other.GetComponent<SpeedBoost>().finalVelocity;
             howLongBoost = other.GetComponent<SpeedBoost>().howLong;
             Destroy(other.gameObject);
+
+            //Stop emiting smoke
+            leftExhaust.transform.GetChild(0).gameObject.SetActive(false);
+            rightExhaust.transform.GetChild(0).gameObject.SetActive(false);
+
+            //Start Emiting Fire !!
+            leftExhaust.transform.GetChild(1).gameObject.SetActive(true);
+            rightExhaust.transform.GetChild(1).gameObject.SetActive(true);
         }
 
         // TimeBosst

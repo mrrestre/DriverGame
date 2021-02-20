@@ -11,7 +11,10 @@ public class SingleMission : MonoBehaviour
 
     //Where does the mission starts
     public GameObject startObject;
+
+    //Skybox content
     public GameObject skyBoxObject;
+    public SkyBox skyBoxScript;
 
     //How long does the player has to complete the mission
     public int timeForMission;
@@ -62,6 +65,11 @@ public class SingleMission : MonoBehaviour
     public List<GameObject> unorderedObjectives;
     public int unorderedObjectiveCounter = 0;
 
+
+    void Start()
+    {
+        skyBoxScript = skyBoxObject.GetComponent<SkyBox>();
+    }
 
     // Update is called once per frame
     void Update()

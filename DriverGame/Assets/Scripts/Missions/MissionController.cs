@@ -71,6 +71,9 @@ public class MissionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Set the Skybox to the Skybox saved on each mission
+        RenderSettings.skybox = currentMission.skyBoxScript.skyBoxMaterial;
+
         //If there are still missions to be done
         if(!allMissionsDone)
         {

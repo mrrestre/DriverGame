@@ -59,7 +59,10 @@ public class ProccessController : MonoBehaviour
         missionController = missionControllerObject.GetComponent<MissionController>();
         carController = player.GetComponent<CarController>();
 
-        autoPosition = new Vector3(184.5f, 1.12845f, 6.805f);
+        autoPosition = new Vector3( carController.gameObject.transform.position.x, 
+                                    carController.gameObject.transform.position.y, 
+                                    carController.gameObject.transform.position.z);
+
         autoRotation = new Quaternion(0f, 0f, 0f, 0f);
         collectedCoins = new List<GameObject>();
         currentHealth = 1f;
