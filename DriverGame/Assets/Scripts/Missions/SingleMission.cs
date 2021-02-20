@@ -11,6 +11,7 @@ public class SingleMission : MonoBehaviour
 
     //Where does the mission starts
     public GameObject startObject;
+    public GameObject skyBoxObject;
 
     //How long does the player has to complete the mission
     public int timeForMission;
