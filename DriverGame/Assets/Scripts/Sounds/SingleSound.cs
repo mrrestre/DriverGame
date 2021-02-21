@@ -18,4 +18,7 @@ public class SingleSound
     public AudioSource source;
 
     public bool loop;
+
+    public AudioMixer output;
+    public AudioMixerGroup output1;
 }

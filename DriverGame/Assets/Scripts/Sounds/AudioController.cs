@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class AudioController : MonoBehaviour
 {
+    
+
     public string standardBackgroundMusic = "Background1";
 
     public SingleSound[] sounds;
@@ -21,6 +23,8 @@ public class AudioController : MonoBehaviour
             sound.source.volume = sound.volume;
             sound.source.pitch  = sound.pitch;
             sound.source.loop   = sound.loop;
+            sound.source.outputAudioMixerGroup = sound.output1;
+            
         }
     }
 
