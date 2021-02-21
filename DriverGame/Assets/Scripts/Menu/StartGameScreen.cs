@@ -21,6 +21,8 @@ public class StartGameScreen : MonoBehaviour
             canvas.SetActive(true);
             Time.timeScale = 1f;
             UIElement.SetActive(false);
+            FindObjectOfType<CarSoundController>().TurnOnTheCar();
+            Destroy(this);
         }
     }
 }

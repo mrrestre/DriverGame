@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GetCarTanked : MonoBehaviour
 {
     public HealthBar healthBar;
-    [SerializeField] private GameObject getRefuel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,12 +15,12 @@ public class GetCarTanked : MonoBehaviour
     {
         
     }
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player_Car")
         {
+            FindObjectOfType<AudioController>().PlaySoundByName("TankCar");
             healthBar.setHealthBarFull();
-            this.getRefuel.GetComponent<AudioSource>().Play();
         }
     }
 }

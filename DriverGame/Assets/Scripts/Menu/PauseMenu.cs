@@ -27,6 +27,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isGamePaused = false;
+        FindObjectOfType<AudioController>().PlaySoundByName("EngineSound");
     }
 
     public void Pause()
@@ -34,6 +35,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isGamePaused = true;
+        FindObjectOfType<AudioController>().PauseSoundWithName("EngineSound");
     }
 
     public void LoadMenu()

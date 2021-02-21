@@ -118,9 +118,6 @@ public class CarController : MonoBehaviour
 
     [SerializeField] private GameObject obstacleDissapears;
     [SerializeField] private GameObject obstacleDamages;
-    [SerializeField] private GameObject pickingCoin;
-    [SerializeField] private GameObject getShooted;
-
 
     ////////////////////////////////////
 
@@ -156,8 +153,9 @@ public class CarController : MonoBehaviour
     //To define how far the wheels may turn
     [SerializeField] private float maxWheelTurn = 25f;
 
-    [SerializeField] private GameObject playHorn_1;
-    [SerializeField] private GameObject playHorn_2;
+    ////////////////////////////////////
+
+    private AudioController audioController;
 
     //Input for both axis
     private float turnInput;
@@ -210,6 +208,9 @@ public class CarController : MonoBehaviour
 
         //Procces controller
         proccessController = proccesControllerRB.GetComponent<ProccessController>();
+
+        //Audio Controller
+        audioController = FindObjectOfType<AudioController>();
     }
 
     // Update is called once per frame
@@ -223,7 +224,7 @@ public class CarController : MonoBehaviour
 
         if(areAllCoinsCollected)
         {
-            //Deactivate teh old body
+            //Deactivate the old body
             tiltingPart.SetActive(false);
 
             //Activate the new Body
@@ -244,17 +245,16 @@ public class CarController : MonoBehaviour
         ////////////////////////Play-Horn//////////////////////////////
         if (Input.GetKeyDown("e"))
         {
-            this.playHorn_1.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("Horn1");
         }
         if (Input.GetKeyUp("e"))
         {
-            this.playHorn_1.GetComponent<AudioSource>().Stop();
+            audioController.PauseSoundWithName("Horn1");
         }
         if (Input.GetKeyDown("q"))
         {
-            this.playHorn_2.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("Horn2");
         }
-
 
         ////////////////////////Power-Ups//////////////////////////////
 
@@ -296,10 +296,12 @@ public class CarController : MonoBehaviour
        
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            audioController.PlaySoundByName("Handbrake");
             handbrake = true;
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
+            audioController.PauseSoundWithName("Handbrake");
             handbrake = false;
         }
 
@@ -448,9 +450,6 @@ public class CarController : MonoBehaviour
             currentAccelerationTilt = Mathf.Clamp(currentAccelerationTilt, -accelerationMaxTilt, accelerationMaxTilt);
         }
 
-
-        
-
         ////////////////////////Turning Tilt////////////////////////
 
         //Only Applies if the car is going forward
@@ -538,6 +537,8 @@ public class CarController : MonoBehaviour
         // SpeedBoost
         if (other.tag == "SpeedBoost")
         {
+            audioController.PlaySoundByName("SpeedPowerUp");
+
             speedboosting = true;
             accelerationRate = other.GetComponent<SpeedBoost>().accelerationRate;
             finalVelocity = other.GetComponent<SpeedBoost>().finalVelocity;
@@ -553,15 +554,17 @@ public class CarController : MonoBehaviour
             rightExhaust.transform.GetChild(1).gameObject.SetActive(true);
         }
 
-        // TimeBosst
-        if (other.tag == "TimeBoost")
+        // TimeBoost
+        else if (other.tag == "TimeBoost")
         {
+            audioController.PlaySoundByName("TimePowerUp");
+
             countdown.elapsedTime = countdown.elapsedTime - other.GetComponent<TimePowerUp>().timeToAddToCountdown;
             Destroy(other.gameObject);
         }
 
         // Gravity Boost
-        if (other.tag == "GravityBoost")
+        else if (other.tag == "GravityBoost")
         {
             gravityboosting = true;
             gravityModifier = 1;
@@ -569,21 +572,23 @@ public class CarController : MonoBehaviour
         }
 
         //If the other object should dissapear on contact
-        if (other.gameObject.tag == "Obstacle_Dissapears")
+        else if (other.gameObject.tag == "Obstacle_Dissapears")
         {
-            this.obstacleDissapears.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("SoftColision");
+            
             this.obstacleDissapears.GetComponent<ParticleSystem>().Play();
             other.gameObject.SetActive(false);
         }
         
+        //
         else if(other.gameObject.tag == "Player_Damage")
         {
-            this.obstacleDamages.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("HardColision");
+
             this.obstacleDamages.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             this.obstacleDamages.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
 
-            // hier kommt den Logik von Damage
-            // MAX SPEED 50
+            //How much damage is inflected to the car
             if (currentVelocity > 0 && currentVelocity <= 5)
             { healthBar.setHealthBarDamage(.02f); }
             else if (currentVelocity > 5 && currentVelocity <= 10)
@@ -599,14 +604,17 @@ public class CarController : MonoBehaviour
 
             ResetAllMovementValues();
         }
+
         else if(other.gameObject.tag == "Bullet")
         {
-            this.getShooted.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("RockHitsCar");
             healthBar.setHealthBarDamage(.03f);
         }
+
         else if (other.gameObject.tag == "Coins")
         {
-            this.pickingCoin.GetComponent<AudioSource>().Play();
+            audioController.PlaySoundByName("CollectCoin");
+
             AddCoinToCollectedCoins(other.gameObject);
             SetCollectedCoinsCounter(collectedCoins.Count);
             other.gameObject.SetActive(false);

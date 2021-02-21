@@ -17,9 +17,11 @@ public class MissionFailedMenu : MonoBehaviour
 
     public void ActivateScreen()
     {
+        FindObjectOfType<AudioController>().PlaySoundByName("GameOver");
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         canvas.SetActive(false);
+        FindObjectOfType<AudioController>().PauseSoundWithName("EngineSound");
     }
 
     public void LoadLastSavedgame()

@@ -182,6 +182,8 @@ public class MissionController : MonoBehaviour
             //Was the mission end element touched, then the mission is done
             if (currentMission.hasMissionEnded == true)
             {
+                //FindObjectOfType<AudioController>().PlaySoundByName("EndMissionSound");
+
                 //Add mission to the done mission
                 this.doneMissions.Add(currentMission);
 
