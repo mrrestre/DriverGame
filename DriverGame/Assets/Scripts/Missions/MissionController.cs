@@ -281,6 +281,7 @@ public class MissionController : MonoBehaviour
             {
                 //Deactivate the start element on map
                 currentMission.startObject.gameObject.SetActive(false);
+                currentMission.secretStartScreen.SetActive(false);
 
                 //Start Timer
                 if (!countdown.hasMissionStarted)

@@ -579,7 +579,14 @@ public class CarController : MonoBehaviour
             this.obstacleDissapears.GetComponent<ParticleSystem>().Play();
             other.gameObject.SetActive(false);
         }
-        
+
+        else if (other.gameObject.tag == "Person_Dissapears")
+        {
+            audioController.PlaySoundByName("TimePowerUp");
+
+            other.gameObject.SetActive(false);
+        }
+
         //
         else if(other.gameObject.tag == "Player_Damage")
         {
