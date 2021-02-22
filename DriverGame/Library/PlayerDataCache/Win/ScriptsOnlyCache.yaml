@@ -15,6 +15,7 @@ ScriptsOnlyBuild:
     - MainMenu
     - MissionController
     - MissionFailedMenu
+    - Options
     - PauseMenu
     - ProccessController
     - SingleMission
@@ -57,11 +58,16 @@ ScriptsOnlyBuild:
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.Dropdown
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
     - UnityEngine.UI.Mask
     - UnityEngine.UI.RawImage
+    - UnityEngine.UI.ScrollRect
+    - UnityEngine.UI.Scrollbar
+    - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
+    - UnityEngine.UI.Toggle
   sceneClasses:
     Assets/Scenes/CleanScene.unity:
     - Class: 1
@@ -113,85 +119,99 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11264}
     - Class: 114
-      Script: {instanceID: 11286}
-    - Class: 114
       Script: {instanceID: 11312}
     - Class: 114
-      Script: {instanceID: 11334}
+      Script: {instanceID: 11338}
     - Class: 114
-      Script: {instanceID: 11352}
+      Script: {instanceID: 11360}
     - Class: 114
-      Script: {instanceID: 11400}
+      Script: {instanceID: 11378}
     - Class: 114
-      Script: {instanceID: 11428}
+      Script: {instanceID: 11426}
     - Class: 114
-      Script: {instanceID: 11536}
+      Script: {instanceID: 11454}
     - Class: 114
-      Script: {instanceID: 11556}
+      Script: {instanceID: 11514}
     - Class: 114
-      Script: {instanceID: 11646}
+      Script: {instanceID: 11562}
     - Class: 114
-      Script: {instanceID: 11666}
-    - Class: 114
-      Script: {instanceID: 11668}
+      Script: {instanceID: 11582}
     - Class: 114
       Script: {instanceID: 11672}
     - Class: 114
-      Script: {instanceID: 11688}
+      Script: {instanceID: 11692}
     - Class: 114
-      Script: {instanceID: 11860}
+      Script: {instanceID: 11694}
+    - Class: 114
+      Script: {instanceID: 11698}
+    - Class: 114
+      Script: {instanceID: 11714}
     - Class: 114
       Script: {instanceID: 11886}
     - Class: 114
-      Script: {instanceID: 11988}
+      Script: {instanceID: 11912}
     - Class: 114
-      Script: {instanceID: 12202}
+      Script: {instanceID: 11948}
     - Class: 114
-      Script: {instanceID: 12250}
+      Script: {instanceID: 12014}
     - Class: 114
-      Script: {instanceID: 12268}
+      Script: {instanceID: 12228}
     - Class: 114
-      Script: {instanceID: 12346}
+      Script: {instanceID: 12236}
     - Class: 114
-      Script: {instanceID: 12460}
+      Script: {instanceID: 12276}
     - Class: 114
-      Script: {instanceID: 12482}
+      Script: {instanceID: 12294}
     - Class: 114
-      Script: {instanceID: 12586}
+      Script: {instanceID: 12372}
     - Class: 114
-      Script: {instanceID: 12592}
+      Script: {instanceID: 12410}
     - Class: 114
-      Script: {instanceID: 12650}
+      Script: {instanceID: 12488}
     - Class: 114
-      Script: {instanceID: 12680}
+      Script: {instanceID: 12510}
     - Class: 114
-      Script: {instanceID: 12728}
+      Script: {instanceID: 12614}
     - Class: 114
-      Script: {instanceID: 12804}
+      Script: {instanceID: 12620}
     - Class: 114
-      Script: {instanceID: 12912}
+      Script: {instanceID: 12678}
     - Class: 114
-      Script: {instanceID: 12976}
+      Script: {instanceID: 12708}
     - Class: 114
-      Script: {instanceID: 13008}
+      Script: {instanceID: 12756}
     - Class: 114
-      Script: {instanceID: 13050}
+      Script: {instanceID: 12832}
     - Class: 114
-      Script: {instanceID: 13090}
+      Script: {instanceID: 12940}
     - Class: 114
-      Script: {instanceID: 13170}
+      Script: {instanceID: 13004}
     - Class: 114
-      Script: {instanceID: 13248}
+      Script: {instanceID: 13036}
     - Class: 114
-      Script: {instanceID: 13294}
+      Script: {instanceID: 13078}
     - Class: 114
-      Script: {instanceID: 13340}
+      Script: {instanceID: 13118}
     - Class: 114
-      Script: {instanceID: 13420}
+      Script: {instanceID: 13198}
     - Class: 114
-      Script: {instanceID: 13446}
+      Script: {instanceID: 13278}
     - Class: 114
-      Script: {instanceID: 63060}
+      Script: {instanceID: 13324}
+    - Class: 114
+      Script: {instanceID: 13370}
+    - Class: 114
+      Script: {instanceID: 13450}
+    - Class: 114
+      Script: {instanceID: 13460}
+    - Class: 114
+      Script: {instanceID: 13476}
+    - Class: 114
+      Script: {instanceID: 13494}
+    - Class: 114
+      Script: {instanceID: 13512}
+    - Class: 114
+      Script: {instanceID: 13518}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -230,6 +250,12 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 238
       Script: {instanceID: 0}
+    - Class: 241
+      Script: {instanceID: 0}
+    - Class: 243
+      Script: {instanceID: 0}
+    - Class: 245
+      Script: {instanceID: 0}
     Assets/Scenes/MainMenu.unity:
     - Class: 1
       Script: {instanceID: 0}
@@ -254,33 +280,49 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11286}
+      Script: {instanceID: 11264}
     - Class: 114
-      Script: {instanceID: 11536}
+      Script: {instanceID: 11312}
     - Class: 114
-      Script: {instanceID: 11922}
+      Script: {instanceID: 11514}
     - Class: 114
-      Script: {instanceID: 11988}
+      Script: {instanceID: 11562}
     - Class: 114
-      Script: {instanceID: 12020}
+      Script: {instanceID: 11912}
     - Class: 114
-      Script: {instanceID: 12460}
+      Script: {instanceID: 11948}
     - Class: 114
-      Script: {instanceID: 12728}
+      Script: {instanceID: 12014}
     - Class: 114
-      Script: {instanceID: 12744}
+      Script: {instanceID: 12046}
     - Class: 114
-      Script: {instanceID: 12976}
+      Script: {instanceID: 12236}
     - Class: 114
-      Script: {instanceID: 13050}
+      Script: {instanceID: 12410}
     - Class: 114
-      Script: {instanceID: 13228}
+      Script: {instanceID: 12488}
     - Class: 114
-      Script: {instanceID: 13340}
+      Script: {instanceID: 12756}
     - Class: 114
-      Script: {instanceID: 13446}
+      Script: {instanceID: 12772}
     - Class: 114
-      Script: {instanceID: 63060}
+      Script: {instanceID: 13004}
+    - Class: 114
+      Script: {instanceID: 13078}
+    - Class: 114
+      Script: {instanceID: 13258}
+    - Class: 114
+      Script: {instanceID: 13370}
+    - Class: 114
+      Script: {instanceID: 13460}
+    - Class: 114
+      Script: {instanceID: 13476}
+    - Class: 114
+      Script: {instanceID: 13494}
+    - Class: 114
+      Script: {instanceID: 13512}
+    - Class: 114
+      Script: {instanceID: 13518}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -296,6 +338,12 @@ ScriptsOnlyBuild:
     - Class: 223
       Script: {instanceID: 0}
     - Class: 224
+      Script: {instanceID: 0}
+    - Class: 241
+      Script: {instanceID: 0}
+    - Class: 243
+      Script: {instanceID: 0}
+    - Class: 245
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -750,6 +798,12 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
+      Hash: bbac81bc0424855ffdc05d8b66d6408a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: AudioController
+  - hash:
+      serializedVersion: 2
       Hash: 694d20920c0e41f567e119f7159a3644
     assemblyName: Cinemachine.dll
     namespaceName: Cinemachine
@@ -1158,6 +1212,12 @@ ScriptsOnlyBuild:
     className: Slider
   - hash:
       serializedVersion: 2
+      Hash: d835e37be8caf473a0d64dc941f2a2a8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Options
+  - hash:
+      serializedVersion: 2
       Hash: 0fd6822f6177297bd0eb4d83cc7a9030
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -1168,14 +1228,8 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: b95e531fc09216dfd4c53dfab5bcb888
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: AudioController
   platform: 5
   scenePathNames:
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/CleanScene.unity
-  playerPath: D:/Test/DriverGame.exe
+  playerPath: C:/Users/ahmadabolouha/Desktop/TestDriver/DriverGame.exe
