@@ -29,8 +29,14 @@ public class MissionController : MonoBehaviour
     //Done Mission list
     public List<SingleMission> doneMissions = new List<SingleMission>();
 
-    private bool allMissionsDone = false;
+    public bool allRegularMissionsDone = false;
 
+    ////////Secret Mission Scripts////////
+
+    [Header("Secret Mission")]
+
+    public SingleMission secretMission;
+    public bool secretMissionActivated = false;
 
     ////////External Scripts////////
 
@@ -56,6 +62,8 @@ public class MissionController : MonoBehaviour
     public GameObject endGameScreen;
     private EndGameMenu endGameMenu;
 
+    ///////////////////////////////////
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,11 +79,13 @@ public class MissionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Set the Skybox to the Skybox saved on each mission
-        RenderSettings.skybox = currentMission.skyBoxScript.skyBoxMaterial;
+        if(carController.areAllCoinsCollected)
+        {
+            secretMissionActivated = true;
+        }
 
         //If there are still missions to be done
-        if(!allMissionsDone)
+        if (!allRegularMissionsDone)
         {
             //If a mission has been started (Start element was touched with the car)
             if (currentMission.hasMissionStarted == true)
@@ -84,7 +94,7 @@ public class MissionController : MonoBehaviour
                 currentMission.startObject.gameObject.SetActive(false);
 
                 //Start Timer
-                if(!countdown.hasMissionStarted)
+                if (!countdown.hasMissionStarted)
                 {
                     countdown.StartCountdown(currentMission.timeForMission);
                 }
@@ -100,7 +110,7 @@ public class MissionController : MonoBehaviour
                 {
                     //Mission is to go from point A to point B
                     case SingleMission.MissionType.simpleMission:
-                        
+
                         //Activate the end element on map
                         currentMission.endObject.gameObject.SetActive(true);
 
@@ -125,7 +135,7 @@ public class MissionController : MonoBehaviour
                             currentMission.objectivesList[currentMission.objectiveCounter].gameObject.SetActive(false);
 
                             //All objectives from the mission are done
-                            if(currentMission.objectiveCounter == currentMission.objectivesList.Length - 1)
+                            if (currentMission.objectiveCounter == currentMission.objectivesList.Length - 1)
                             {
                                 currentMission.hasMissionEnded = true;
                             }
@@ -141,7 +151,9 @@ public class MissionController : MonoBehaviour
                     //Go through a list of objects in any order (Hit enemies for example)
                     case SingleMission.MissionType.missionArrayOfObjectivesDissordered:
 
-       
+                        //Disable the way point
+                        waypoint.gameObject.SetActive(false);
+
                         //Every objective has been done
                         if (currentMission.unorderedObjectives.Count == 0)
                         {
@@ -152,7 +164,7 @@ public class MissionController : MonoBehaviour
                             //Go through every element
                             for (int i = 0; i < currentMission.unorderedObjectives.Count; i++)
                             {
-                                
+
                                 //If an objective was touched increase the counter
                                 if (currentMission.unorderedObjectives[i].GetComponent<SingleObject>().objectTouched == true)
                                 {
@@ -174,7 +186,6 @@ public class MissionController : MonoBehaviour
                                 }
                             }
                         }
-                        
                         break;
                 }
             }
@@ -182,7 +193,7 @@ public class MissionController : MonoBehaviour
             //Was the mission end element touched, then the mission is done
             if (currentMission.hasMissionEnded == true)
             {
-                //FindObjectOfType<AudioController>().PlaySoundByName("EndMissionSound");
+                FindObjectOfType<AudioController>().PlaySoundByName("EndMissionSound");
 
                 //Add mission to the done mission
                 this.doneMissions.Add(currentMission);
@@ -196,7 +207,7 @@ public class MissionController : MonoBehaviour
                 //Stop Timer
                 countdown.StopCountdown();
 
-                //If the mission has any enemies, activate them
+                //If the mission has any enemies, deactivate them
                 if (currentMission.isThereEnemies == true)
                 {
                     currentMission.enemiesFolder.SetActive(false);
@@ -214,34 +225,118 @@ public class MissionController : MonoBehaviour
                 //Increment the mission counter
                 this.missionCounter++;
 
-                //Show Mission Overview (If it isn´t the last mission)
-                if(this.missionCounter != this.missionsList.Count)
+
+                //Show End Game Screen (If it isn´t the last mission)
+                if (this.missionCounter != this.missionsList.Count)
                 {
-                    currentMission.activeEndMissionScreen();
+                    currentMission.ActiveEndMissionScreen();
                     carController.ResetAllMovementValues();
                 }
-
                 //Show all mission overview if that was the last mission
-                else
+                else if (this.missionCounter == this.missionsList.Count && !secretMissionActivated)
                 {
                     Debug.Log("You Completed all missions!");
 
                     //Set the all missions done boolean to true
-                    this.allMissionsDone = true;
+                    this.allRegularMissionsDone = true;
 
                     endGameMenu.ActivateScreen();
                 }
+                //Only if all missions are played and the secret mission is active
+                else
+                {
+                    this.allRegularMissionsDone = true;
+
+                    currentMission.ActiveEndMissionScreen();
+
+                    //Save the current state
+                    proccessController.SaveGame(player.transform.position,
+                                                 player.transform.rotation,
+                                                 carController.GetCollectedCoins(),
+                                                 this.doneMissions,
+                                                 carController.healthBar.getCurrentHealth());
+                    //Start the secret Mission
+                    StartSecretMission();
+
+                    //Stop the following steps
+                    return;
+                }
+
 
                 //Save the current state
-                proccessController.SaveGame( player.transform.position, 
-                                             player.transform.rotation, 
-                                             carController.GetCollectedCoins(), 
-                                             this.doneMissions, 
-                                             carController.healthBar.getCurrentHealth() );
-
+                proccessController.SaveGame(player.transform.position,
+                                             player.transform.rotation,
+                                             carController.GetCollectedCoins(),
+                                             this.doneMissions,
+                                             carController.healthBar.getCurrentHealth());
 
                 //Start a new mission (If not all missions are done)
                 StartNextMission();
+            }
+        }
+
+        else if (allRegularMissionsDone && secretMissionActivated)
+        {
+            if (currentMission.hasMissionStarted == true)
+            {
+                //Deactivate the start element on map
+                currentMission.startObject.gameObject.SetActive(false);
+
+                //Start Timer
+                if (!countdown.hasMissionStarted)
+                {
+                    countdown.StartCountdown(currentMission.timeForMission);
+                }
+
+                //If the mission has any enemies, activate them
+                if (currentMission.isThereEnemies == true)
+                {
+                    currentMission.enemiesFolder.SetActive(true);
+                }
+
+                //Activate the next posible objective
+                currentMission.objectivesList[currentMission.objectiveCounter].gameObject.SetActive(true);
+
+                //Set the waypoint to the next objective
+                waypoint.setTarget(currentMission.objectivesList[currentMission.objectiveCounter].transform);
+
+                //Check if the next objective is reached
+                if (currentMission.objectivesList[currentMission.objectiveCounter].GetComponent<SingleObject>().objectTouched == true)
+                {
+                    //Deactivate the objective
+                    currentMission.objectivesList[currentMission.objectiveCounter].gameObject.SetActive(false);
+
+                    //All objectives from the mission are done
+                    if (currentMission.objectiveCounter == currentMission.objectivesList.Length - 1)
+                    {
+                        currentMission.hasMissionEnded = true;
+                    }
+                    else
+                    {
+                        //Set the next objective
+                        currentMission.objectiveCounter++;
+                    }
+                }
+            }
+
+            if (currentMission.hasMissionEnded == true)
+            {
+                Debug.Log("Secret Mission Done!");
+
+                //Write how long was needed to complete the mission
+                currentMission.completionTime = (int)countdown.elapsedTime;
+                Debug.Log("Time needed to end secret mission " + currentMission.completionTime);
+
+                //Stop Timer
+                countdown.StopCountdown();
+
+                //If the mission has any enemies, deactivate them
+                if (currentMission.isThereEnemies == true)
+                {
+                    currentMission.enemiesFolder.SetActive(false);
+                }
+
+                endGameMenu.ActivateScreen();
             }
         }
     }
@@ -261,6 +356,28 @@ public class MissionController : MonoBehaviour
 
             //Set Waypoint to the start object of the next mission
             waypoint.setTarget(currentMission.startObject.transform);
+
+            currentMission.skyBoxScript.SetSkyBoxSettings();
         }
     }   
+
+    void StartSecretMission()
+    {
+        FindObjectOfType<AudioController>().PauseSoundWithName("Background1");
+        FindObjectOfType<AudioController>().PlaySoundByName("SpookyTheme");
+
+        currentMission = secretMission;
+
+        Debug.Log("Next Mission is the secret Mission");
+
+        //Set start trigger active
+        currentMission.startObject.SetActive(true);
+
+        //Set Waypoint to the start object of the next mission
+        waypoint.setTarget(currentMission.startObject.transform);
+
+        currentMission.skyBoxScript.SetSkyBoxSettings();
+    }
+
+    
 }

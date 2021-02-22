@@ -13,6 +13,7 @@ TagManager:
   - Coins
   - SpeedBoost
   - TimeBoost
+  - BatHit
   layers:
   - Default
   - TransparentFX

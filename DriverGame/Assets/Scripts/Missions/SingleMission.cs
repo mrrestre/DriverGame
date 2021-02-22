@@ -98,7 +98,7 @@ public class SingleMission : MonoBehaviour
     }
 
     //Method for the representation of the mission overview
-    public void activeEndMissionScreen()
+    public void ActiveEndMissionScreen()
     {
         endMissionScreen.SetActive(true);
         endMissionTimeText.GetComponent<TextMeshProUGUI>().text = completionTime.ToString() + " s";

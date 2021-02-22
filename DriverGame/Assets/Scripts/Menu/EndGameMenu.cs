@@ -11,6 +11,7 @@ public class EndGameMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         canvas.SetActive(false);
+        FindObjectOfType<AudioController>().PauseSoundWithName("EngineSound");
     }
 
     public void BackToMenu()

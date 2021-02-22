@@ -115,6 +115,17 @@ public class ProccessController : MonoBehaviour
             missionController.countdown.StopCountdown();
             missionController.currentMission.startObject.SetActive(true);
             missionController.waypoint.setTarget(missionController.GetComponent<MissionController>().currentMission.startObject.transform);
+            missionController.currentMission.enemiesFolder.SetActive(false);
+
+            if (missionController.currentMission.missionType == SingleMission.MissionType.missionArrayOfObjectivesDissordered)
+            {
+                //Go through every element
+                for (int i = 0; i < missionController.currentMission.unorderedObjectives.Count; i++)
+                {
+                    //Disable the Objectives
+                    missionController.currentMission.unorderedObjectives[i].SetActive(false);
+                }
+            }
         }
     }
 

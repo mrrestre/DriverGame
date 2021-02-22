@@ -611,6 +611,12 @@ public class CarController : MonoBehaviour
             healthBar.setHealthBarDamage(.03f);
         }
 
+        else if (other.gameObject.tag == "BatHit")
+        {
+            Debug.Log("Htting you");
+            healthBar.setHealthBarDamage(.04f);
+        }
+
         else if (other.gameObject.tag == "Coins")
         {
             audioController.PlaySoundByName("CollectCoin");
