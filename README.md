@@ -9,7 +9,7 @@ Repository made for the Project from "Interaktive Technologien / Interaktionsges
   
 ## If you want to just play the game do the following:
   1) Clone this Repository
-  2) Go to (WO IST DAS SPIEL??)
+  2) Go to *DriverGame/DriverGame/Game_Ende/*
   3) Open the file DriverGame.exe
 
 ## If you want to see the development on Unity:
