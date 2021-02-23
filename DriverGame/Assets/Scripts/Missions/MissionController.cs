@@ -225,6 +225,11 @@ public class MissionController : MonoBehaviour
                 //Increment the mission counter
                 this.missionCounter++;
 
+                if(currentMission.missionType == SingleMission.MissionType.missionArrayOfObjectivesDissordered)
+                {
+                    waypoint.gameObject.SetActive(true);
+                }
+
 
                 //Show End Game Screen (If it isn´t the last mission)
                 if (this.missionCounter != this.missionsList.Count)
