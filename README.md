@@ -26,9 +26,7 @@ Repository made for the Project from "Interaktive Technologien / Interaktionsges
   2) Open the file *End_Dokumentation.pdf*
 
 ## There is a nice Demo of the game in form of a video. Want to see it? Do this:
-  1) Clone this Repository
-  2) Go to (WO IST DAS VIDEO??)
-  3) Open the file (VIDEO_NAME).mp4
+  Download the Video here: https://drive.google.com/file/d/1wv3drkiDZ11jKDUysaYm-bXb3fKfiOPR/view?usp=sharing
 
 ## If you are intereted in looking at a couple of Slides about the game look at this file:
   - *DriverGame/DriverGame/Dokumentation/End_Presentation.pdf*
