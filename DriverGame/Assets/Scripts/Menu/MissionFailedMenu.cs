@@ -30,5 +30,6 @@ public class MissionFailedMenu : MonoBehaviour
         Time.timeScale = 1f;
         canvas.SetActive(true);
         proccessController.LoadGame();
+        FindObjectOfType<AudioController>().PlaySoundByName("EngineSound");
     }
 }

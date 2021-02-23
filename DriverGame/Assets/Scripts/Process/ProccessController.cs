@@ -111,6 +111,12 @@ public class ProccessController : MonoBehaviour
         if(missionController.currentMission.hasMissionStarted)
         {
             Debug.Log("Mission Was Running");
+
+            if(missionController.currentMission.missionType == SingleMission.MissionType.missionArrayOfObjectivesOrdered)
+            {
+                missionController.currentMission.objectiveCounter = 0;
+            }
+
             missionController.currentMission.startObject.GetComponent<StartMissionTrigger>().hasMissionStarted = false;
             missionController.countdown.StopCountdown();
             missionController.currentMission.startObject.SetActive(true);
